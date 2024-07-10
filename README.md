@@ -1,0 +1,2 @@
+Must install:
+Tesseract OCR
