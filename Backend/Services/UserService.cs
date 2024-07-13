@@ -5,6 +5,9 @@ namespace Backend.Services
 {
     public class UserService
     {
+        /// <summary>
+        /// Class giving service for accessing, editing and deleting user data from database
+        /// </summary>
         private readonly IDatabaseHandler _databaseConnection;
 
         public UserService(IDatabaseHandler databaseConnection)

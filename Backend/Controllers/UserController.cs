@@ -19,6 +19,11 @@ namespace Backend.Controllers
         [HttpGet("{username}/{password}")]
         public async Task<IActionResult> GetUserData(string username, string password)
         {
+            ///<summary>
+            ///Api to get user data for username and password - mainly id
+            ///</summary>
+            ///<param name="username"></param>
+            ///<param name="password"></param>
             User userData;
             try
             {
@@ -35,6 +40,25 @@ namespace Backend.Controllers
             }
 
             return Ok(userData); 
+        }
+
+        [HttpPost("{username}/{password}")]
+        public async Task<IActionResult> RegisterUser(string username, string password)
+        {
+            ///<summary>
+            ///Api to register user with username and password
+            ///</summary>
+            ///<param name="username"></param>
+            ///<param name="password"></param>
+            try
+            {
+                _userService.RegisterUser(username, password);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
     }
 

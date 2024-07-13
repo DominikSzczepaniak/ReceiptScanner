@@ -7,6 +7,9 @@ namespace Backend.Data
 {
     public class PostgresConnection : IDatabaseHandler
     {
+        /// <summary>
+        /// Class implementing postgres connection
+        /// </summary>
         private string ConnectionString { get; set; }
         private NpgsqlConnection _connection;
 
