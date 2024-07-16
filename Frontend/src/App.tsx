@@ -1,11 +1,15 @@
-import Sidebar from "./components/Sidebar"
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import MainPage from './Pages/MainPage';
+import Login from './Pages/UserPage';
 
 function App() {
-
   return (
-    <>
-      <Sidebar side={true} width={300} close={() => {}} />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
