@@ -15,12 +15,32 @@ namespace Backend.Services
             _databaseConnection = databaseConnection;
         }
 
-        public async Task<User> GetUser(string username, string password)
+        public async Task<User> GetUserData(string username, string password)
         {
             try
             {
-                User user = await _databaseConnection.GetUser(username, password);
+                User user = await _databaseConnection.GetUserData(username, password);
                 return user;
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+        }
+
+        public async void RegisterUser(string username, string password)
+        {
+            try
+            {
+                await _databaseConnection.RegisterUser(username, password);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
             }
             catch (ArgumentException ex)
             {
@@ -28,17 +48,16 @@ namespace Backend.Services
             }
         }
 
-        public async Task<bool> RegisterUser(string username, string password)
+        public async void DeleteUser(string username, string password)
         {
             try
             {
-                bool result = await _databaseConnection.RegisterUser(username, password);
-                return result;
-            } catch(Exception ex)
+                await _databaseConnection.DeleteUser(username, password);
+            }
+            catch (InvalidOperationException ex)
             {
-                throw new Exception(ex.Message);
+                throw new InvalidOperationException(ex.Message);
             }
         }
-
     }
 }

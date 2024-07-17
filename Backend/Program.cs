@@ -10,10 +10,9 @@ class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        string ConnectionString = "TODO";
 
         builder.Services.AddSingleton<IDatabaseHandler>(sp =>
-            new PostgresConnection(builder.Configuration.GetConnectionString(ConnectionString)));
+            new PostgresConnection());
         builder.Services.AddSingleton<UserService>();
 
         builder.Services.AddControllers();
