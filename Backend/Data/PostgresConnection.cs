@@ -198,7 +198,16 @@ namespace Backend.Data
 
         public async Task AddReceipt(DateTime dateTime, string shopName, int ownerId)
         {
-            throw new NotImplementedException();
+            if (!await ConnectAsync())
+                throw new InvalidOperationException("Could not establish a connection to the database.");
+
+            await using var cmd = new NpgsqlCommand("INSERT INTO Receipts VALUES (@date, @name, @id)");
+            cmd.Parameters.AddWithValue("date", dateTime);
+            cmd.Parameters.AddWithValue("name", shopName);
+            cmd.Parameters.AddWithValue("id", ownerId);
+
+            await cmd.ExecuteNonQueryAsync();
+            Disconnect();
         }
     }
 }
