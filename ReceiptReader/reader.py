@@ -48,9 +48,15 @@ if args["d"] > 0:
     cv2.imshow("Edged", edged)
     cv2.waitKey(0)
 
-cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-cnts = imutils.grab_contours(cnts)
+ret, thresh = cv2.threshold(edged.copy(), 127, 255, 0)
+cnts, abc = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+# cnts = imutils.grab_contours(cnts)
 cnts = sorted(cnts, key=cv2.contourArea, reverse=True)
+# output = image.copy()
+# cv2.drawContours(output, cnts, 99, (0, 255, 0), 2)
+# cv2.imshow("Contours", output)
+# cv2.waitKey(0)
+# exit(0)
 
 receiptCnt = None
 for c in cnts:
@@ -86,6 +92,8 @@ print(text)
 print()
 print()
 pattern = r'([0-9]+\,[0-9]+)'
+
+suma = r'SUM.'
 for row in text.split('\n'):
     if(re.search(pattern, row)):
         print(row)
