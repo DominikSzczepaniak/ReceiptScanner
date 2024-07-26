@@ -11,7 +11,7 @@ function Navbar(props: NavbarProps) {
 
     let [showbar, setShowbar] = useState(false);
 
-    let sideBar = <Sidebar rightSide={false} width={300} close={() => setShowbar(false)} />;
+    let sideBar = <Sidebar />;
 
     const handleShowbarOpening = () => {
         setShowbar(true);

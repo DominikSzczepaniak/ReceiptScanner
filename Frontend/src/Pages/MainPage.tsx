@@ -1,5 +1,4 @@
 import ReceiptCard from "../components/ReceiptCard";
-import Sidebar from "../components/Sidebar"
 
 function MainPage() {
 
