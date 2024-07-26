@@ -1,31 +1,58 @@
-interface ReceiptItem{
+import React, { useEffect, useState } from "react";
+
+interface ReceiptItem {
     Name: string;
     Price: number;
     Amount: string;
 }
 
-interface ReceiptCardProps{
+interface ReceiptCardProps {
     ShopName: string;
     Date: string;
     Total: number;
     Items: Array<ReceiptItem>;
 }
 
+const ReceiptCard: React.FC<ReceiptCardProps> = ({ ShopName, Date, Total, Items }) => {
+    const [cardWidth, setCardWidth] = useState(0);
 
-function ReceiptCard(props: ReceiptCardProps){
-    const {ShopName, Date, Total, Items} = props;
-    let screenWidth = window.innerWidth;
-    let sideBarWidth = screenWidth * 0.2;
-    let mainSize = screenWidth - sideBarWidth - 20;
-    console.log(mainSize)
-    let marginSize = 32;
-    let cardWidth = (mainSize - marginSize*4)/4;
-    console.log(cardWidth);
-    let numberOfCards = [1,2,3,4,5,6]
-    //margin takes 
+    const calcNumberOfCards = (width: number) => {
+        if (width > 1024) {
+            return 4;
+        } else if (width > 768) {
+            return 3;
+        } else if (width > 640) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
 
-    return(
-        <div className={`h-1/4 p-4 rounded-lg border-8 border-solid border-primary-color bg-secondary-color text-text-color m-4`} style={{width: cardWidth+"px"}}>
+    const calculateCardWidth = () => {
+        const screenWidth = window.innerWidth;
+        const sideBarWidth = screenWidth * 0.2;
+        const mainSize = screenWidth - sideBarWidth - 20;
+        const marginSize = 32;
+        const numberOfCards = calcNumberOfCards(screenWidth);
+        return (mainSize - marginSize * numberOfCards) / numberOfCards - 5;
+    }
+
+    useEffect(() => {
+        const handleResize = () => {
+            setCardWidth(calculateCardWidth());
+        };
+
+        setCardWidth(calculateCardWidth());
+
+        window.addEventListener('resize', handleResize);
+        
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    return (
+        <div className={`h-1/4 p-4 rounded-lg border-8 border-solid border-primary-color bg-secondary-color text-text-color m-4`} style={{ width: cardWidth + "px" }}>
             <div className="receipt-card-header">
                 <h3>{ShopName}</h3>
                 <p>{Date}</p>
@@ -40,7 +67,6 @@ function ReceiptCard(props: ReceiptCardProps){
             </div>
         </div>
     )
-    
 }
 
 export default ReceiptCard;

@@ -10,6 +10,7 @@ function UserPage() {
         fetch(`/user/${username.value}/${password.value}`)
         .then(response => response.json())
         .then(data => {
+            console.log(data);
             if (data === 'success') {
                 // redirect to main page
                 window.location.href = '/';

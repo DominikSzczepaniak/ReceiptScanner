@@ -8,10 +8,7 @@ interface SidebarProps {
 function Sidebar(props: SidebarProps) {
     const sidebarRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);  // Start with the sidebar closed
-    let screenWidth = window.innerWidth;
-    let sideBarWidth = screenWidth * 0.2;
-    let mainSizeWidth = screenWidth - sideBarWidth - 20;
-    let mainSize = mainSizeWidth.toString() + "px";
+    const [width, setWidth] = useState(window.innerWidth);
 
     const toggleIsOpen = () => {
         setIsOpen(!isOpen);
@@ -29,6 +26,24 @@ function Sidebar(props: SidebarProps) {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+    useEffect( () => {
+        window.addEventListener('resize', () => {
+            setWidth(window.innerWidth);
+        });
+
+        return () => {
+            window.removeEventListener('resize', () => {
+                setWidth(window.innerWidth);
+            });
+        }
+    });
+
+    
+    let screenWidth = width;
+    let sideBarWidth = screenWidth * 0.2;
+    let mainSizeWidth = screenWidth - sideBarWidth - 20;
+    let mainSize = mainSizeWidth.toString() + "px";
 
     return (
         <>
