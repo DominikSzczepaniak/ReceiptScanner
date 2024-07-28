@@ -1,45 +1,58 @@
-
+import React from 'react';
 
 function UserPage() {
+    const serverLink = 'https://localhost:7168/api';
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         const username = document.getElementById('username') as HTMLInputElement;
         const password = document.getElementById('password') as HTMLInputElement;
+        //sessionStorage
+        try {
+            const response = await fetch(`${serverLink}/User/${username.value}/${password.value}`, {
+                method: 'GET', // lub POST w zależności od API
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-        // send get request to backend link at /user/username/password
-        fetch(`/user/${username.value}/${password.value}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            if (data === 'success') {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log(data)
+
+            if (response.ok) {
                 // redirect to main page
                 window.location.href = '/';
             } else {
                 // show error message
                 alert('Invalid username or password');
             }
-        });
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+            alert('Failed to login. Please try again later.');
+        }
     }
 
     return (
         <div>
             <p className="Text">Please enter your login credentials</p>
             <fieldset className="Fieldset">
-            <label className="border-solid border-2 border-sky-500" htmlFor="username">
-                Username
-            </label>
-            <input className="border-solid border-2 border-sky-500" id="username" defaultValue="Username" />
+                <label className="border-solid border-2 border-sky-500" htmlFor="username">
+                    Username
+                </label>
+                <input className="border-solid border-2 border-sky-500" id="username" defaultValue="Username" />
             </fieldset>
             <fieldset className="Fieldset">
-            <label className="border-solid border-2 border-sky-500" htmlFor="password">
-                Password
-            </label>
-            <input className="border-solid border-2 border-sky-500" id="password" type="password"/>
+                <label className="border-solid border-2 border-sky-500" htmlFor="password">
+                    Password
+                </label>
+                <input className="border-solid border-2 border-sky-500" id="password" type="password"/>
             </fieldset>
-            <button className="bg-green-400 flex mt-4 justify-end">Login</button>
+            <button className="bg-green-400 flex mt-4 justify-end" onClick={handleLogin}>Login</button>
         </div>
-  
-    )
+    );
 }
 
 export default UserPage;

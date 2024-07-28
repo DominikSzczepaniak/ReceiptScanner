@@ -17,6 +17,16 @@ class Program
 
         builder.Services.AddControllers();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowSpecificOrigin",
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:5173") 
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+        });
 
         var app = builder.Build();
 
@@ -28,6 +38,7 @@ class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseCors("AllowSpecificOrigin");
 
         app.MapControllers();
 
