@@ -1,15 +1,14 @@
-import React from 'react';
+import {serverLink} from "../settings"
 
 function UserPage() {
-    const serverLink = 'https://localhost:7168/api';
 
     const handleLogin = async () => {
         const username = document.getElementById('username') as HTMLInputElement;
         const password = document.getElementById('password') as HTMLInputElement;
-        //sessionStorage
+        
         try {
             const response = await fetch(`${serverLink}/User/${username.value}/${password.value}`, {
-                method: 'GET', // lub POST w zależności od API
+                method: 'GET', 
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -20,7 +19,6 @@ function UserPage() {
             }
 
             const data = await response.json();
-            console.log(data)
 
             if (response.ok) {
                 // redirect to main page

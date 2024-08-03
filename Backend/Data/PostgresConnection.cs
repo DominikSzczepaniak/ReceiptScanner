@@ -10,15 +10,15 @@ namespace Backend.Data
 {
     public class PostgresConnection : IDatabaseHandler
     {
-        private string ConnectionString = "Host=127.0.0.1;Port=5432;Username=ReceiptProject;Password=Receipts;Database=ReceiptProject;";
+        public static string ConnectionString;// = "Host=127.0.0.1;Port=5432;Username=ReceiptProject;Password=Receipts;Database=ReceiptProject;";
         private NpgsqlConnection _connection;
-
         public async Task<bool> ConnectAsync()
         {
             try
             {
                 _connection = new NpgsqlConnection(ConnectionString);
                 await _connection.OpenAsync();
+                Console.WriteLine("connected");
                 return _connection.State == System.Data.ConnectionState.Open;
             }
             catch (Exception ex)
@@ -28,13 +28,14 @@ namespace Backend.Data
             }
         }
 
-        public void Disconnect()
+        public async void Disconnect()
         {
             try
             {
                 if (_connection != null && _connection.State == System.Data.ConnectionState.Open)
                 {
-                    _connection.Close();
+                    await _connection.CloseAsync();
+                    Console.WriteLine("disconnected");
                 }
             }
             catch (Exception ex)
@@ -92,11 +93,11 @@ namespace Backend.Data
         public async Task RegisterUser(string username, string password)
         {
             int userid = await GetMaximumUserID() + 1;
+            Console.WriteLine(userid);
             if (!await ConnectAsync())
                 throw new InvalidOperationException("Could not establish a connection to the database.");
-
             await using var checkExistance =
-                new NpgsqlCommand("SELECT COUNT(*) FROM Users WHERE Username=@username AND Password=@password");
+                new NpgsqlCommand("SELECT COUNT(*) FROM Users WHERE Username=@username AND Password=@password", _connection);
             checkExistance.Parameters.AddWithValue("username", username);
             checkExistance.Parameters.AddWithValue("password", password);
 
@@ -124,8 +125,7 @@ namespace Backend.Data
                 throw new InvalidOperationException("Could not establish a connection to the database.");
             
             await using var cmd =
-                new NpgsqlCommand("DELETE FROM Users WHERE Username=@username AND Password=@password",
-                    _connection);
+                new NpgsqlCommand("DELETE FROM Users WHERE Username=@username AND Password=@password", _connection);
             cmd.Parameters.AddWithValue("username", username);
             cmd.Parameters.AddWithValue("password", password);
 
@@ -189,7 +189,7 @@ namespace Backend.Data
             if (!await ConnectAsync())
                 throw new InvalidOperationException("Could not establish a connection to the database.");
 
-            await using var cmd = new NpgsqlCommand("DELETE FROM Receipts WHERE ID=@id");
+            await using var cmd = new NpgsqlCommand("DELETE FROM Receipts WHERE ID=@id", _connection);
             cmd.Parameters.AddWithValue("id", id);
 
             await cmd.ExecuteNonQueryAsync();
@@ -201,7 +201,7 @@ namespace Backend.Data
             if (!await ConnectAsync())
                 throw new InvalidOperationException("Could not establish a connection to the database.");
 
-            await using var cmd = new NpgsqlCommand("INSERT INTO Receipts VALUES (@date, @name, @id)");
+            await using var cmd = new NpgsqlCommand("INSERT INTO Receipts VALUES (@date, @name, @id)", _connection);
             cmd.Parameters.AddWithValue("date", dateTime);
             cmd.Parameters.AddWithValue("name", shopName);
             cmd.Parameters.AddWithValue("id", ownerId);

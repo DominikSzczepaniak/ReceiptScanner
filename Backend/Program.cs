@@ -10,10 +10,12 @@ class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-
+        var connectionString = builder.Configuration.GetSection("ConnectionString").Get<String>();
+        PostgresConnection.ConnectionString = connectionString;
         builder.Services.AddSingleton<IDatabaseHandler>(sp =>
             new PostgresConnection());
         builder.Services.AddSingleton<UserService>();
+        builder.Services.AddSingleton<ReceiptService>();
 
         builder.Services.AddControllers();
         builder.Services.AddSwaggerGen();
