@@ -15,6 +15,7 @@ class Program
         builder.Services.AddSingleton<IDatabaseHandler>(sp =>
             new PostgresConnection());
         builder.Services.AddSingleton<UserService>();
+        builder.Services.AddSingleton<ProductService>();
         builder.Services.AddSingleton<ReceiptService>();
 
         builder.Services.AddControllers();

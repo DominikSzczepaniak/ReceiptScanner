@@ -23,5 +23,16 @@ namespace Backend.Data
         public Task DeleteReceipt(int id);
 
         public Task AddReceipt(DateTime dateTime, string shopName, int ownerId);
+
+        public Task AddProduct(string name, decimal price, decimal quantityWeight, string category);
+
+        public Task<Product> GetProduct(int id);
+
+        public Task<List<Product>> GetReceiptProduct(int receiptId);
+
+
+        public Task DeleteProduct(int id);
+        
+        public Task DeleteReceiptProducts(int receiptId);
     }
 }

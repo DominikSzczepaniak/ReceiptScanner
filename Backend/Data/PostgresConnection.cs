@@ -1,10 +1,5 @@
 ﻿using Backend.Models;
-using Microsoft.Extensions.Logging;
 using Npgsql;
-using System;
-using System.Data;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Backend.Data
 {
@@ -144,7 +139,7 @@ namespace Backend.Data
 
             await using var reader = await cmd.ExecuteReaderAsync();
 
-            Receipt receipt = null;
+            Receipt receipt;
             if (await reader.ReadAsync())
             {
                 DateTime dateTime = reader.GetDateTime(reader.GetOrdinal("Date"));
@@ -208,6 +203,71 @@ namespace Backend.Data
 
             await cmd.ExecuteNonQueryAsync();
             Disconnect();
+        }
+
+        public async Task AddProduct(string name, decimal price, decimal quantityWeight, string category)
+        {
+            if (!await ConnectAsync())
+                throw new InvalidOperationException("Could not establish a connection to the database.");
+
+            await using var cmd =
+                new NpgsqlCommand("INSERT INTO Products VALUES (@name, @price, @quantityWeight, @category)",
+                    _connection);
+            cmd.Parameters.AddWithValue("name", name);
+            cmd.Parameters.AddWithValue("price", price);
+            cmd.Parameters.AddWithValue("quantityWeight", quantityWeight);
+            cmd.Parameters.AddWithValue("category", category);
+
+            await cmd.ExecuteNonQueryAsync();
+            Disconnect();
+        }
+
+        public async Task<Product> GetProduct(int id)
+        {
+            if (!await ConnectAsync())
+                throw new InvalidOperationException("Could not establish a connection to the database.");
+
+            await using var cmd = new NpgsqlCommand("SELECT * FROM Products WHERE ID=@id", _connection);
+            cmd.Parameters.AddWithValue("id", id);
+
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            Product product;
+            if (await reader.ReadAsync())
+            {
+                string name = reader.GetString(reader.GetOrdinal("Name"));
+                decimal quantityWeight = reader.GetDecimal(reader.GetOrdinal("QuantityWeight"));
+                decimal price = reader.GetDecimal(reader.GetOrdinal("Price"));
+                int ownerID = reader.GetInt32(reader.GetOrdinal("OwnerID"));
+                string category = reader.GetString(reader.GetOrdinal("Category"));
+                product = new Product(id, name, quantityWeight, price, ownerID, category);
+            }
+            else
+            {
+                throw new ArgumentException("No product with such id");
+            }
+
+            Disconnect();
+            return product;
+        }
+
+        public async Task<List<Product>> GetReceiptProduct(int receiptId)
+        {
+            throw new NotImplementedException(); //search ReceiptToProducts table for all products
+        }
+
+        public async Task DeleteProduct(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task DeleteReceiptProducts(int receiptId)
+        {
+            var products = await GetReceiptProduct(receiptId);
+            foreach (var product in products)
+            {
+                await DeleteProduct(product.Id);
+            }
         }
     }
 }

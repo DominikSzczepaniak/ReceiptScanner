@@ -1,4 +1,5 @@
-﻿using Backend.Models;
+﻿using System.Text.Json;
+using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +12,11 @@ namespace Backend.Controllers
     public class ReceiptController : Controller
     {
         private readonly ReceiptService _receiptService;
-        public ReceiptController(ReceiptService receiptService)
+        private readonly ProductService _productService;
+        public ReceiptController(ReceiptService receiptService, ProductService productService)
         {
             _receiptService = receiptService;
+            _productService = productService;
         }
 
         [HttpGet("{id}")]
@@ -62,12 +65,27 @@ namespace Backend.Controllers
             }
         }
 
-        [HttpPost("{dateTime}/{shopName}/{ownerId}")]
-        public async Task<IActionResult> AddReceipt(DateTime dateTime, string shopName, int ownerId)
+        [HttpPost("{ownerId}")]
+        public async Task<IActionResult> AddReceipt([FromBody] JsonReceipt order, int ownerId)
         {
+            //json body:
+            //{
+            // shopName: string,
+            // date: DateTime
+            // items: {
+            //   name: string,
+            //   quantity_weight: decimal,
+            //   price: decimal,
+            //   category: string
+            // }
+            //}
             try
             {
-                await _receiptService.AddReceipt(dateTime, shopName, ownerId);
+                await _receiptService.AddReceipt(order.Date, order.ShopName, ownerId);
+                foreach (var item in order.Items)
+                {
+                    await _productService.AddProduct(item.Name, item.Price, item.QuantityWeight, item.Category);
+                }
                 return Ok();
             }
             catch (InvalidOperationException ex)

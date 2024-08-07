@@ -1,4 +1,5 @@
-﻿using Backend.Data;
+﻿using System.Text.Json;
+using Backend.Data;
 using Backend.Models;
 
 namespace Backend.Services;
@@ -58,7 +59,7 @@ public class ReceiptService
     {
         try
         {
-            _databaseConnection.AddReceipt(dateTime, shopName, ownerID);
+            await _databaseConnection.AddReceipt(dateTime, shopName, ownerID);
         }
         catch (InvalidOperationException ex)
         {
