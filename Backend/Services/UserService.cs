@@ -3,23 +3,13 @@ using Backend.Models;
 
 namespace Backend.Services
 {
-    public class UserService
+    public class UserService(IDatabaseHandler databaseConnection)
     {
-        /// <summary>
-        /// Class giving service for accessing, editing and deleting user data from database
-        /// </summary>
-        private readonly IDatabaseHandler _databaseConnection;
-
-        public UserService(IDatabaseHandler databaseConnection)
-        {
-            _databaseConnection = databaseConnection;
-        }
-
         public async Task<User> GetUserData(string username, string password)
         {
             try
             {
-                User user = await _databaseConnection.GetUserData(username, password);
+                var user = await databaseConnection.GetUserData(username, password);
                 return user;
             }
             catch (ArgumentException ex)
@@ -36,7 +26,7 @@ namespace Backend.Services
         {
             try
             {
-                await _databaseConnection.RegisterUser(username, password);
+                await databaseConnection.RegisterUser(username, password);
             }
             catch (InvalidOperationException ex)
             {
@@ -52,7 +42,7 @@ namespace Backend.Services
         {
             try
             {
-                await _databaseConnection.DeleteUser(username, password);
+                await databaseConnection.DeleteUser(username, password);
             }
             catch (InvalidOperationException ex)
             {

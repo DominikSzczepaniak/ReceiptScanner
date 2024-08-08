@@ -1,26 +1,17 @@
-﻿using Backend.Models;
-using Backend.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 namespace Backend.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProductController : Controller
+public class ProductController(ProductService productService) : Controller
 {
-    private readonly ProductService _productService;
-
-    public ProductController(ProductService productService)
-    {
-        _productService = productService;
-    }
-
-    [HttpGet("{id}")]
+    [HttpGet("{productId}")]
     public async Task<IActionResult> GetProduct(int productId)
     {
         try
         {
-            Product product = await _productService.GetProduct(productId);
+            var product = await productService.GetProduct(productId);
             return Ok(product);
         }
         catch (ArgumentException ex)
@@ -38,7 +29,7 @@ public class ProductController : Controller
     {
         try
         {
-            return Ok(await _productService.GetReceiptProducts(receiptId));
+            return Ok(await productService.GetReceiptProducts(receiptId));
         } 
         catch (ArgumentException ex)
         {
@@ -50,12 +41,12 @@ public class ProductController : Controller
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{productId}")]
     public async Task<IActionResult> DeleteProduct(int productId)
     {
         try
         {
-            await _productService.DeleteProduct(productId);
+            await productService.DeleteProduct(productId);
             return Ok();
         } 
         catch (ArgumentException ex)

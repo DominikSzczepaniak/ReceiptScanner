@@ -5,7 +5,7 @@ namespace Backend.Data
 {
     public class PostgresConnection : IDatabaseHandler
     {
-        public static string ConnectionString;// = "Host=127.0.0.1;Port=5432;Username=ReceiptProject;Password=Receipts;Database=ReceiptProject;";
+        public static string ConnectionString;
         private NpgsqlConnection _connection;
         public async Task<bool> ConnectAsync()
         {
@@ -50,12 +50,12 @@ namespace Backend.Data
 
             await using var reader = await cmd.ExecuteReaderAsync();
 
-            User user = null;
+            User user;
             if (await reader.ReadAsync())
             {
-                int id = reader.GetInt32(reader.GetOrdinal("ID"));
-                string dbUsername = reader.GetString(reader.GetOrdinal("Username"));
-                string dbPassword = reader.GetString(reader.GetOrdinal("Password"));
+                var id = reader.GetInt32(reader.GetOrdinal("ID"));
+                var dbUsername = reader.GetString(reader.GetOrdinal("Username"));
+                var dbPassword = reader.GetString(reader.GetOrdinal("Password"));
                 user = new User(id, dbUsername, dbPassword);
             }
             else
@@ -67,7 +67,7 @@ namespace Backend.Data
             return user;
         }
 
-        public async Task<int> GetMaximumUserID()
+        public async Task<int> GetMaximumUserId()
         {
             if (!await ConnectAsync())
                 throw new InvalidOperationException("Could not establish a connection to the database.");
@@ -75,7 +75,7 @@ namespace Backend.Data
             await using var cmd = new NpgsqlCommand("SELECT MAX(ID) FROM Users", _connection);
             await using var reader = await cmd.ExecuteReaderAsync();
 
-            int id = 0; //if there's no users we want the first user to have id = 1
+            var id = 0; //if there's no users we want the first user to have id = 1
             if (await reader.ReadAsync())
             {
                 id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
@@ -87,8 +87,8 @@ namespace Backend.Data
 
         public async Task RegisterUser(string username, string password)
         {
-            int userid = await GetMaximumUserID() + 1;
-            Console.WriteLine(userid);
+            var userid = await GetMaximumUserId() + 1;
+            
             if (!await ConnectAsync())
                 throw new InvalidOperationException("Could not establish a connection to the database.");
             await using var checkExistance =
@@ -97,7 +97,7 @@ namespace Backend.Data
             checkExistance.Parameters.AddWithValue("password", password);
 
             var result = await checkExistance.ExecuteScalarAsync();
-            int count = Convert.ToInt32(result);
+            var count = Convert.ToInt32(result);
             if (count > 0)
             {
                 Disconnect();
@@ -142,10 +142,10 @@ namespace Backend.Data
             Receipt receipt;
             if (await reader.ReadAsync())
             {
-                DateTime dateTime = reader.GetDateTime(reader.GetOrdinal("Date"));
-                string shopName = reader.GetString(reader.GetOrdinal("Shopname"));
-                int ownerID = reader.GetInt32(reader.GetOrdinal("OwnerID"));
-                receipt = new Receipt(id, dateTime, shopName, ownerID);
+                var dateTime = reader.GetDateTime(reader.GetOrdinal("Date"));
+                var shopName = reader.GetString(reader.GetOrdinal("Shopname"));
+                var ownerId = reader.GetInt32(reader.GetOrdinal("OwnerID"));
+                receipt = new Receipt(id, dateTime, shopName, ownerId);
             }
             else
             {
@@ -165,14 +165,14 @@ namespace Backend.Data
             cmd.Parameters.AddWithValue("userId", userId);
 
             await using var reader = await cmd.ExecuteReaderAsync();
-            List<Receipt> result = new List<Receipt>();
+            var result = new List<Receipt>();
             while (await reader.ReadAsync())
             {
-                int id = reader.GetInt32(reader.GetOrdinal("ID"));
-                DateTime dateTime = reader.GetDateTime(reader.GetOrdinal("Date"));
-                string shopName = reader.GetString(reader.GetOrdinal("Shopname"));
-                int ownerID = reader.GetInt32(reader.GetOrdinal("OwnerID"));
-                result.Add(new Receipt(id, dateTime, shopName, ownerID));
+                var id = reader.GetInt32(reader.GetOrdinal("ID"));
+                var dateTime = reader.GetDateTime(reader.GetOrdinal("Date"));
+                var shopName = reader.GetString(reader.GetOrdinal("Shopname"));
+                var ownerId = reader.GetInt32(reader.GetOrdinal("OwnerID"));
+                result.Add(new Receipt(id, dateTime, shopName, ownerId));
             }
 
             Disconnect();
@@ -236,12 +236,12 @@ namespace Backend.Data
             Product product;
             if (await reader.ReadAsync())
             {
-                string name = reader.GetString(reader.GetOrdinal("Name"));
-                decimal quantityWeight = reader.GetDecimal(reader.GetOrdinal("QuantityWeight"));
-                decimal price = reader.GetDecimal(reader.GetOrdinal("Price"));
-                int ownerID = reader.GetInt32(reader.GetOrdinal("OwnerID"));
-                string category = reader.GetString(reader.GetOrdinal("Category"));
-                product = new Product(id, name, quantityWeight, price, ownerID, category);
+                var name = reader.GetString(reader.GetOrdinal("Name"));
+                var quantityWeight = reader.GetDecimal(reader.GetOrdinal("QuantityWeight"));
+                var price = reader.GetDecimal(reader.GetOrdinal("Price"));
+                var ownerId = reader.GetInt32(reader.GetOrdinal("OwnerID"));
+                var category = reader.GetString(reader.GetOrdinal("Category"));
+                product = new Product(id, name, quantityWeight, price, ownerId, category);
             }
             else
             {
@@ -255,7 +255,7 @@ namespace Backend.Data
         public async Task<List<Product>> GetReceiptProducts(int receiptId)
         {
             var productIds = await GetProductsIdForReceipt(receiptId);
-            List<Product> result = new List<Product>();
+            var result = new List<Product>();
             foreach (var productId in productIds)
             {
                 result.Add(await GetProduct(productId));
@@ -294,10 +294,10 @@ namespace Backend.Data
             cmd.Parameters.AddWithValue("receiptId", receiptId);
 
             await using var reader = await cmd.ExecuteReaderAsync();
-            List<int> result = new List<int>();
+            var result = new List<int>();
             while (await reader.ReadAsync())
             {
-                int id = reader.GetInt32(reader.GetOrdinal("ProductID"));
+                var id = reader.GetInt32(reader.GetOrdinal("ProductID"));
                 result.Add(id);
             }
 

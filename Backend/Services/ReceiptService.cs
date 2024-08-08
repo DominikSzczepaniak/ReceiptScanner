@@ -1,23 +1,15 @@
-﻿using System.Text.Json;
-using Backend.Data;
+﻿using Backend.Data;
 using Backend.Models;
 
 namespace Backend.Services;
 
-public class ReceiptService
+public class ReceiptService(IDatabaseHandler databaseConnection)
 {
-    private readonly IDatabaseHandler _databaseConnection;
-
-    public ReceiptService(IDatabaseHandler databaseConnection)
-    {
-        _databaseConnection = databaseConnection;
-    }
-
     public async Task<Receipt> GetReceiptData(int id)
     {
         try
         {
-            Receipt receipt = await _databaseConnection.GetReceiptData(id);
+            var receipt = await databaseConnection.GetReceiptData(id);
             return receipt;
         }
         catch (InvalidOperationException ex)
@@ -30,11 +22,11 @@ public class ReceiptService
         }
     }
 
-    public async Task<List<Receipt>> GetReceiptsForUser(int ownerID)
+    public async Task<List<Receipt>> GetReceiptsForUser(int ownerId)
     {
         try
         {
-            List<Receipt> receipts = await _databaseConnection.GetReceiptsForUser(ownerID);
+            var receipts = await databaseConnection.GetReceiptsForUser(ownerId);
             return receipts;
         }
         catch (InvalidOperationException ex)
@@ -45,15 +37,15 @@ public class ReceiptService
 
     public async Task DeleteReceipt(int id) //TODO delete also from ReceiptToProducts database
     {
-        await _databaseConnection.DeleteReceiptProducts(id);
-        await _databaseConnection.DeleteReceipt(id);
+        await databaseConnection.DeleteReceiptProducts(id);
+        await databaseConnection.DeleteReceipt(id);
     }
 
-    public async Task AddReceipt(DateTime dateTime, string shopName, int ownerID)
+    public async Task AddReceipt(DateTime dateTime, string shopName, int ownerId)
     {
         try
         {
-            await _databaseConnection.AddReceipt(dateTime, shopName, ownerID);
+            await databaseConnection.AddReceipt(dateTime, shopName, ownerId);
         }
         catch (InvalidOperationException ex)
         {

@@ -2,28 +2,19 @@
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
-
-
 namespace Backend.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ReceiptController : Controller
+public class ReceiptController(ReceiptService receiptService, ProductService productService)
+    : Controller
 {
-    private readonly ReceiptService _receiptService;
-    private readonly ProductService _productService;
-    public ReceiptController(ReceiptService receiptService, ProductService productService)
-    {
-        _receiptService = receiptService;
-        _productService = productService;
-    }
-
     [HttpGet("{id}")]
     public async Task<IActionResult> GetReceiptData(int id)
     {
         try
         {
-            Receipt receipt = await _receiptService.GetReceiptData(id);
+            var receipt = await receiptService.GetReceiptData(id);
             return Ok(receipt);
         }
         catch (ArgumentException ex)
@@ -36,12 +27,12 @@ public class ReceiptController : Controller
         }
     }
 
-    [HttpGet("receiptList/{ownerid}")]
-    public async Task<IActionResult> GetReceiptsForUser(int ownerid)
+    [HttpGet("receiptList/{ownerId}")]
+    public async Task<IActionResult> GetReceiptsForUser(int ownerId)
     {
         try
         {
-            List<Receipt> receipts = await _receiptService.GetReceiptsForUser(ownerid);
+            var receipts = await receiptService.GetReceiptsForUser(ownerId);
             return Ok(receipts);
         }
         catch (InvalidOperationException ex)
@@ -50,12 +41,12 @@ public class ReceiptController : Controller
         }
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteReceipt(int id)
+    [HttpDelete("{receiptId}")]
+    public async Task<IActionResult> DeleteReceipt(int receiptId)
     {
         try
         {
-            await _receiptService.DeleteReceipt(id);
+            await receiptService.DeleteReceipt(receiptId);
             return Ok();
         }
         catch (InvalidOperationException ex)
@@ -80,10 +71,10 @@ public class ReceiptController : Controller
         //}
         try
         {
-            await _receiptService.AddReceipt(order.Date, order.ShopName, ownerId);
+            await receiptService.AddReceipt(order.Date, order.ShopName, ownerId);
             foreach (var item in order.Items)
             {
-                await _productService.AddProduct(item.Name, item.Price, item.QuantityWeight, item.Category, ownerId);
+                await productService.AddProduct(item.Name, item.Price, item.QuantityWeight, item.Category, ownerId);
             }
             return Ok();
         }
