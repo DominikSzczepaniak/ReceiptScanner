@@ -43,16 +43,10 @@ public class ReceiptService
         }
     }
 
-    public async Task DeleteReceipt(int id)
+    public async Task DeleteReceipt(int id) //TODO delete also from ReceiptToProducts database
     {
-        try
-        {
-            await _databaseConnection.DeleteReceipt(id);
-        }
-        catch (InvalidOperationException ex)
-        {
-            throw new InvalidOperationException(ex.Message);
-        }
+        await _databaseConnection.DeleteReceiptProducts(id);
+        await _databaseConnection.DeleteReceipt(id);
     }
 
     public async Task AddReceipt(DateTime dateTime, string shopName, int ownerID)
@@ -65,6 +59,5 @@ public class ReceiptService
         {
             throw new InvalidOperationException(ex.Message);
         }
-        
     }
 }
