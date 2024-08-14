@@ -1,3 +1,4 @@
+#Right now it's needed to make a photo with all corners of receipt visible. Otherwise it will not work properly. 
 import PIL.Image
 import numpy as np
 import pandas as pd
@@ -48,15 +49,17 @@ if args["d"] > 0:
     cv2.imshow("Edged", edged)
     cv2.waitKey(0)
 
-ret, thresh = cv2.threshold(edged.copy(), 127, 255, 0)
+kernel = np.ones((2, 2), np.uint8)
+dilated = cv2.dilate(edged.copy(), kernel, iterations=1)
+
+if args["d"] > 0:
+    cv2.imshow("Dilated", dilated)
+    cv2.waitKey(0)
+
+ret, thresh = cv2.threshold(dilated.copy(), 127, 255, 0)
 cnts, abc = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-# cnts = imutils.grab_contours(cnts)
 cnts = sorted(cnts, key=cv2.contourArea, reverse=True)
-# output = image.copy()
-# cv2.drawContours(output, cnts, 99, (0, 255, 0), 2)
-# cv2.imshow("Contours", output)
-# cv2.waitKey(0)
-# exit(0)
+#Add black border to image, so it will always have area of 4 corners to scan (dont count it to countours (either ignore or get second contour size))
 
 receiptCnt = None
 for c in cnts:
