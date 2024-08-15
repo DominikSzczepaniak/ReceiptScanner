@@ -5,24 +5,11 @@ import translations from "../translations/pl.json";
 import axios from 'axios';
 import { Receipt } from "../models/Receipt";
 import { Product } from "../models/Product";
-import {debounce} from "../debouncing";
 
 function MainPage() {
   if (sessionStorage.getItem("userid") == null) {
     window.location.href = "/login";
   }
-
-  let debounceTimeout = 0;
-
-  const fetchData = () => {
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout);
-    }
-
-    debounceTimeout = setTimeout(() => {
-      // Wywołanie API
-    }, 300); // Opóźnienie 300 ms
-  };
 
   const userID = sessionStorage.getItem("userid");
   const [receiptCards, setReceiptCards] = useState<JSX.Element[]>([]);
@@ -117,8 +104,8 @@ function MainPage() {
 
 
   useEffect(() => {
-    async function fetchReceipts() {
-      const receipts = await getLastFourReceipts(); //TODO debouncing
+    const fetchReceipts = setTimeout(async () => {
+      const receipts = await getLastFourReceipts(); 
       if (receipts === null) {
         return;
       }
@@ -135,8 +122,9 @@ function MainPage() {
         );
       }));
       setReceiptCards(generatedCards);
-    }
-    fetchReceipts();
+    }, 200);
+    
+    return () => clearTimeout(fetchReceipts);
   }, []);
 
 

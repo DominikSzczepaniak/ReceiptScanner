@@ -2,7 +2,7 @@
 CREATE TABLE Product (
     ID SERIAL PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
-    Quantity_Weight DECIMAL(10, 2) NOT NULL,
+    QuantityWeight DECIMAL(10, 2) NOT NULL,
     Price DECIMAL(10, 2) NOT NULL,
     OwnerID INT NOT NULL,
     Category VARCHAR(255)

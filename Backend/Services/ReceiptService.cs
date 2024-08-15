@@ -24,15 +24,7 @@ public class ReceiptService(IDatabaseHandler databaseConnection, ProductService 
 
     public async Task<List<Receipt>> GetReceiptsForUser(int ownerId)
     {
-        try
-        {
-            var receipts = await databaseConnection.GetReceiptsForUser(ownerId);
-            return receipts;
-        }
-        catch (InvalidOperationException ex)
-        {
-            throw new InvalidOperationException(ex.Message);
-        }
+        return await databaseConnection.GetReceiptsForUser(ownerId);
     }
 
     public async Task<List<Receipt>> GetReceiptsBetweenDates(DateTime startDate, DateTime endDate, int ownerId)

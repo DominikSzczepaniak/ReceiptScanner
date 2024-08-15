@@ -14,9 +14,15 @@ class Program
         var builder = WebApplication.CreateBuilder(args);
 
         var connectionString = builder.Configuration.GetSection("ConnectionString").Get<String>();
+        if (connectionString == null)
+        {
+            Console.WriteLine("Connection string is not established");
+            return;
+        }
         PostgresConnection.ConnectionString = connectionString;
-        builder.Services.AddSingleton<IDatabaseHandler>(sp =>
-            new PostgresConnection());
+        var connection = new PostgresConnection();
+        connection.ConnectAsync().GetAwaiter().GetResult();
+        builder.Services.AddSingleton<IDatabaseHandler>(connection);
         builder.Services.AddSingleton<UserService>();
         builder.Services.AddSingleton<ProductService>();
         builder.Services.AddSingleton<ReceiptService>();

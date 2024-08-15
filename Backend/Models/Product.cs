@@ -7,9 +7,9 @@
         public decimal QuantityWeight { get; set; }
         public decimal Price { get; set; }
         public int OwnerID { get; set; }
-        public string Category { get; set; }
+        public string? Category { get; set; }
 
-        public Product(int id, string name, decimal quantityWeight, decimal price, int ownerid, string category)
+        public Product(int id, string name, decimal quantityWeight, decimal price, int ownerid, string? category)
         {
             this.Id = id;
             this.Name = name;

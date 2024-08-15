@@ -3,10 +3,14 @@ using Npgsql;
 
 namespace Backend.Data
 {
-    public class PostgresConnection : IDatabaseHandler
+    public class PostgresConnection : IDatabaseHandler, IDisposable
     {
         public static string ConnectionString;
         private NpgsqlConnection _connection;
+        public void Dispose()
+        {
+            Disconnect();
+        }
         public async Task<bool> ConnectAsync()
         {
             try
@@ -39,8 +43,6 @@ namespace Backend.Data
 
         public async Task<User> GetUserData(string username, string password)
         {
-            await TryToConnect();
-
             await using var cmd = new NpgsqlCommand("SELECT * FROM Users WHERE Username=@username AND Password=@password", _connection);
             cmd.Parameters.AddWithValue("username", username);
             cmd.Parameters.AddWithValue("password", password);
@@ -60,14 +62,11 @@ namespace Backend.Data
                 throw new ArgumentException("Credentials incorrect");
             }
 
-            Disconnect();
             return user;
         }
 
         public async Task<int> GetMaximumUserId()
         {
-            await TryToConnect();
-
             await using var cmd = new NpgsqlCommand("SELECT MAX(ID) FROM Users", _connection);
             await using var reader = await cmd.ExecuteReaderAsync();
 
@@ -77,14 +76,12 @@ namespace Backend.Data
                 id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
             }
 
-            Disconnect();
             return id;
         }
 
         public async Task RegisterUser(string username, string password)
         {
             var userid = await GetMaximumUserId() + 1;
-            await TryToConnect();
             await using var checkExistance =
                 new NpgsqlCommand("SELECT COUNT(*) FROM Users WHERE Username=@username AND Password=@password", _connection);
             checkExistance.Parameters.AddWithValue("username", username);
@@ -94,7 +91,6 @@ namespace Backend.Data
             var count = Convert.ToInt32(result);
             if (count > 0)
             {
-                Disconnect();
                 throw new ArgumentException("User already exists");
             }
             
@@ -105,27 +101,20 @@ namespace Backend.Data
             cmd.Parameters.AddWithValue("password", password);
 
             await cmd.ExecuteNonQueryAsync();
-            Disconnect();
         }
 
         public async Task DeleteUser(string username, string password)
         {
-            await TryToConnect();
-
             await using var cmd =
                 new NpgsqlCommand("DELETE FROM Users WHERE Username=@username AND Password=@password", _connection);
             cmd.Parameters.AddWithValue("username", username);
             cmd.Parameters.AddWithValue("password", password);
 
             await cmd.ExecuteNonQueryAsync();
-            Disconnect();
-            
         }
 
         public async Task<Receipt> GetReceiptData(int id)
         {
-            await TryToConnect();
-
             await using var cmd = new NpgsqlCommand("SELECT * FROM Receipt WHERE ID=@id", _connection);
             cmd.Parameters.AddWithValue("id", id);
 
@@ -144,14 +133,11 @@ namespace Backend.Data
                 throw new ArgumentException("No receipt with such id");
             }
 
-            Disconnect();
             return receipt;
         }
 
         public async Task<List<Receipt>> GetReceiptsForUser(int userId)
         {
-            await TryToConnect();
-
             await using var cmd = new NpgsqlCommand("SELECT * FROM Receipt WHERE OwnerID=@userId", _connection);
             cmd.Parameters.AddWithValue("userId", userId);
 
@@ -165,38 +151,30 @@ namespace Backend.Data
                 var ownerId = reader.GetInt32(reader.GetOrdinal("OwnerID"));
                 result.Add(new Receipt(id, dateTime, shopName, ownerId));
             }
-            Disconnect();
+            
             return result;
         }
 
         public async Task DeleteReceipt(int id)
         {
-            await TryToConnect();
-
             await using var cmd = new NpgsqlCommand("DELETE FROM Receipt WHERE ID=@id", _connection);
             cmd.Parameters.AddWithValue("id", id);
 
             await cmd.ExecuteNonQueryAsync();
-            Disconnect();
         }
 
         public async Task AddReceipt(DateTime dateTime, string shopName, int ownerId)
         {
-            await TryToConnect();
-
             await using var cmd = new NpgsqlCommand("INSERT INTO Receipt VALUES (@date, @name, @id)", _connection);
             cmd.Parameters.AddWithValue("date", dateTime);
             cmd.Parameters.AddWithValue("name", shopName);
             cmd.Parameters.AddWithValue("id", ownerId);
 
             await cmd.ExecuteNonQueryAsync();
-            Disconnect();
         }
 
         public async Task AddProduct(string name, decimal price, decimal quantityWeight, string category, int ownerId)
         {
-            await TryToConnect();
-
             await using var cmd =
                 new NpgsqlCommand("INSERT INTO Product VALUES (@name, @price, @quantityWeight, @category, @ownerId)",
                     _connection);
@@ -207,13 +185,10 @@ namespace Backend.Data
             cmd.Parameters.AddWithValue("ownerId", ownerId);
 
             await cmd.ExecuteNonQueryAsync();
-            Disconnect();
         }
 
         public async Task<Product> GetProduct(int id)
         {
-            await TryToConnect();
-
             await using var cmd = new NpgsqlCommand("SELECT * FROM Product WHERE ID=@id", _connection);
             cmd.Parameters.AddWithValue("id", id);
 
@@ -226,7 +201,12 @@ namespace Backend.Data
                 var quantityWeight = reader.GetDecimal(reader.GetOrdinal("QuantityWeight"));
                 var price = reader.GetDecimal(reader.GetOrdinal("Price"));
                 var ownerId = reader.GetInt32(reader.GetOrdinal("OwnerID"));
-                var category = reader.GetString(reader.GetOrdinal("Category"));
+
+                string? category = null;
+                if (!reader.IsDBNull(reader.GetOrdinal("Category")))
+                {
+                    category = reader.GetString(reader.GetOrdinal("Category"));
+                }
                 product = new Product(id, name, quantityWeight, price, ownerId, category);
             }
             else
@@ -234,7 +214,6 @@ namespace Backend.Data
                 throw new ArgumentException("No product with such id");
             }
 
-            Disconnect();
             return product;
         }
 
@@ -252,13 +231,10 @@ namespace Backend.Data
 
         public async Task DeleteProduct(int id)
         {
-            await TryToConnect();
-
             await using var cmd = new NpgsqlCommand("DELETE FROM Product WHERE ID=@id", _connection);
             cmd.Parameters.AddWithValue("id", id);
 
             await cmd.ExecuteNonQueryAsync();
-            Disconnect();
         }
 
         public async Task DeleteReceiptProducts(int receiptId)
@@ -272,8 +248,6 @@ namespace Backend.Data
 
         private async Task<List<int>> GetProductsIdForReceipt(int receiptId)
         {
-            await TryToConnect();
-
             await using var cmd = new NpgsqlCommand("SELECT * FROM ReceiptToProducts WHERE ReceiptID=@receiptId", _connection);
             cmd.Parameters.AddWithValue("receiptId", receiptId);
 
@@ -285,16 +259,12 @@ namespace Backend.Data
                 result.Add(id);
             }
 
-            Disconnect();
             return result;
         }
 
         public async Task<List<Receipt>> GetReceiptsBetweenDates(DateTime startDate, DateTime endDate, int ownerId)
         {
-            await TryToConnect();
-
             List<Receipt> result = new List<Receipt>();
-            //TODO repair query
             await using var cmd =
                 new NpgsqlCommand("SELECT * FROM Receipt WHERE Date >= @startDate AND Date <= @endDate AND OwnerId = @ownerId", _connection);
             cmd.Parameters.AddWithValue("startDate", startDate.ToString("d"));
