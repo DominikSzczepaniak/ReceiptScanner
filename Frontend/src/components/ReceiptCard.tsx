@@ -8,12 +8,12 @@ interface ReceiptItem {
 
 interface ReceiptCardProps {
     ShopName: string;
-    Date: string;
+    ReceiptDate: Date;
     Total: number;
-    Items: Array<ReceiptItem>;
+    Items?: Array<ReceiptItem>;
 }
 
-const ReceiptCard: React.FC<ReceiptCardProps> = ({ ShopName, Date, Total, Items }) => {
+const ReceiptCard: React.FC<ReceiptCardProps> = ({ ShopName, ReceiptDate, Total, Items }) => {
     const [cardWidth, setCardWidth] = useState(0);
 
     const calcNumberOfCards = (width: number) => {
@@ -51,16 +51,23 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({ ShopName, Date, Total, Items 
         };
     }, []);
 
+    let _date = new Date(ReceiptDate);
+    let day = _date.getDate();
+    let month = _date.getMonth();
+    let year = _date.getFullYear();
+    let dateString = `${year}-${month}-${day}`;
+
+
     return (
         <div className={`h-1/4 p-4 rounded-lg border-8 border-solid border-primary-color bg-secondary-color text-text-color m-4`} style={{ width: cardWidth + "px" }}>
             <div className="receipt-card-header">
                 <h3>{ShopName}</h3>
-                <p>{Date}</p>
+                <p>{dateString}</p>
                 <h4>Total: {Total}</h4>
             </div>
             <div className="receipt-card-body">
                 <ul>
-                    {Items.map((item, index) => (
+                    {Items?.map((item, index) => (
                         <li key={index}>{item['Name']} - {item['Price']} - {item['Amount']}</li>
                     ))}
                 </ul>

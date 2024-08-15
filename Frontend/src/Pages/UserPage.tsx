@@ -1,33 +1,28 @@
+import axios from "axios";
 import {serverLink} from "../settings"
 
 function UserPage() {
-
+    if(sessionStorage.getItem("userid") != null){
+        //add alert (left bottom screen popup that vanishes after 2 seconds)
+        window.location.href = "/";
+    }
+    
     const handleLogin = async () => {
         const username = document.getElementById('username') as HTMLInputElement;
         const password = document.getElementById('password') as HTMLInputElement;
         
         try {
-            const response = await fetch(`${serverLink}/User/${username.value}/${password.value}`, {
-                method: 'GET', 
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
+            const response = await axios.get(`${serverLink}/User/${username.value}/${password.value}`);
+            if(response.status !== 200){
                 throw new Error('Network response was not ok');
             }
 
-            const data = await response.json();
+            const data = await response.data;
+            console.log(data);
+            console.log("Pomyslnie zalogowano!");
+            sessionStorage.setItem('userid', data.id);
+            window.location.href = '/';
 
-            if (response.ok) {
-                // redirect to main page
-                window.location.href = '/';
-                sessionStorage.setItem('userid', data.id);
-            } else {
-                // show error message
-                alert('Invalid username or password');
-            }
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
             alert('Failed to login. Please try again later.');
