@@ -1826,32 +1826,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\szcze\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/dominik/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\szcze\\Desktop\\ReceiptScanner\\Backend\\Backend.csproj",
+      "projectUniqueName": "/Users/dominik/Desktop/ReceiptScanner/Backend/Backend.csproj",
       "projectName": "Backend",
-      "projectPath": "C:\\Users\\szcze\\Desktop\\ReceiptScanner\\Backend\\Backend.csproj",
-      "packagesPath": "C:\\Users\\szcze\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\szcze\\Desktop\\ReceiptScanner\\Backend\\obj\\",
+      "projectPath": "/Users/dominik/Desktop/ReceiptScanner/Backend/Backend.csproj",
+      "packagesPath": "/Users/dominik/.nuget/packages/",
+      "outputPath": "/Users/dominik/Desktop/ReceiptScanner/Backend/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\szcze\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/dominik/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1910,7 +1902,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -27,13 +27,41 @@ public class ReceiptController(ReceiptService receiptService, ProductService pro
         }
     }
 
-    [HttpGet("receiptList/{ownerId}")]
+    [HttpGet("receipts/{ownerId}")] //TODO: Limit number of receipts retrieved from database and only load more if user changes table in frontend
     public async Task<IActionResult> GetReceiptsForUser(int ownerId)
     {
         try
         {
             var receipts = await receiptService.GetReceiptsForUser(ownerId);
             return Ok(receipts);
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new HttpRequestException(HttpRequestError.ConnectionError, ex.Message);
+        }
+    }
+
+    [HttpGet("totalSpending/{startDate}/{endDate}/{ownerId}")]
+    public async Task<IActionResult> GetTotalSpendingBetweenDates(DateTime startDate, DateTime endDate, int ownerId)
+    {
+        try
+        {
+            var result = await receiptService.GetTotalSpendingBetweenDates(startDate, endDate, ownerId);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new HttpRequestException(HttpRequestError.ConnectionError, ex.Message);
+        }
+    }
+
+    [HttpGet("receipts/{startDate}/{endDate}/{ownerId}")]
+    public async Task<IActionResult> GetReceiptsBetweenDates(DateTime startDate, DateTime endDate, int ownerId)
+    {
+        try
+        {
+            var result = await GetReceiptsBetweenDates(startDate, endDate, ownerId);
+            return Ok(result);
         }
         catch (InvalidOperationException ex)
         {
@@ -69,6 +97,10 @@ public class ReceiptController(ReceiptService receiptService, ProductService pro
         //   category: string
         // }
         //}
+        if (order.ShopName == null || order.Date == null || order.Items == null || order.Items.Count == 0)
+        {
+            throw new HttpRequestException(HttpRequestError.Unknown, "Body is not correct");
+        }
         try
         {
             await receiptService.AddReceipt(order.Date, order.ShopName, ownerId);

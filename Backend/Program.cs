@@ -8,6 +8,9 @@ class Program
 {
     public static void Main(String[] args)
     {
+        //TODO:
+        //When making call from Api to Tesseract return 202 (in progress) while processing photo. Then when asked about data about this photo then return 200 Ok("In progress"), when done return Ok("data")
+        //Verify user in API (can't access other user receipts)
         var builder = WebApplication.CreateBuilder(args);
 
         var connectionString = builder.Configuration.GetSection("ConnectionString").Get<String>();

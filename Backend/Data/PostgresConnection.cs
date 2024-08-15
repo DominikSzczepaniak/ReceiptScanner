@@ -13,7 +13,6 @@ namespace Backend.Data
             {
                 _connection = new NpgsqlConnection(ConnectionString);
                 await _connection.OpenAsync();
-                Console.WriteLine("connected");
                 return _connection.State == System.Data.ConnectionState.Open;
             }
             catch (Exception ex)
@@ -30,7 +29,6 @@ namespace Backend.Data
                 if (_connection != null && _connection.State == System.Data.ConnectionState.Open)
                 {
                     await _connection.CloseAsync();
-                    Console.WriteLine("disconnected");
                 }
             }
             catch (Exception ex)
@@ -41,8 +39,7 @@ namespace Backend.Data
 
         public async Task<User> GetUserData(string username, string password)
         {
-            if (!await ConnectAsync())
-                throw new InvalidOperationException("Could not establish a connection to the database.");
+            await TryToConnect();
 
             await using var cmd = new NpgsqlCommand("SELECT * FROM Users WHERE Username=@username AND Password=@password", _connection);
             cmd.Parameters.AddWithValue("username", username);
@@ -69,8 +66,7 @@ namespace Backend.Data
 
         public async Task<int> GetMaximumUserId()
         {
-            if (!await ConnectAsync())
-                throw new InvalidOperationException("Could not establish a connection to the database.");
+            await TryToConnect();
 
             await using var cmd = new NpgsqlCommand("SELECT MAX(ID) FROM Users", _connection);
             await using var reader = await cmd.ExecuteReaderAsync();
@@ -88,9 +84,7 @@ namespace Backend.Data
         public async Task RegisterUser(string username, string password)
         {
             var userid = await GetMaximumUserId() + 1;
-            
-            if (!await ConnectAsync())
-                throw new InvalidOperationException("Could not establish a connection to the database.");
+            await TryToConnect();
             await using var checkExistance =
                 new NpgsqlCommand("SELECT COUNT(*) FROM Users WHERE Username=@username AND Password=@password", _connection);
             checkExistance.Parameters.AddWithValue("username", username);
@@ -116,9 +110,8 @@ namespace Backend.Data
 
         public async Task DeleteUser(string username, string password)
         {
-            if (!await ConnectAsync())
-                throw new InvalidOperationException("Could not establish a connection to the database.");
-            
+            await TryToConnect();
+
             await using var cmd =
                 new NpgsqlCommand("DELETE FROM Users WHERE Username=@username AND Password=@password", _connection);
             cmd.Parameters.AddWithValue("username", username);
@@ -131,10 +124,9 @@ namespace Backend.Data
 
         public async Task<Receipt> GetReceiptData(int id)
         {
-            if (!await ConnectAsync())
-                throw new InvalidOperationException("Could not establish a connection to the database.");
+            await TryToConnect();
 
-            await using var cmd = new NpgsqlCommand("SELECT * FROM Receipts WHERE ID=@id", _connection);
+            await using var cmd = new NpgsqlCommand("SELECT * FROM Receipt WHERE ID=@id", _connection);
             cmd.Parameters.AddWithValue("id", id);
 
             await using var reader = await cmd.ExecuteReaderAsync();
@@ -158,10 +150,9 @@ namespace Backend.Data
 
         public async Task<List<Receipt>> GetReceiptsForUser(int userId)
         {
-            if (!await ConnectAsync())
-                throw new InvalidOperationException("Could not establish a connection to the database.");
+            await TryToConnect();
 
-            await using var cmd = new NpgsqlCommand("SELECT * FROM Receipts WHERE OwnerID=@userId", _connection);
+            await using var cmd = new NpgsqlCommand("SELECT * FROM Receipt WHERE OwnerID=@userId", _connection);
             cmd.Parameters.AddWithValue("userId", userId);
 
             await using var reader = await cmd.ExecuteReaderAsync();
@@ -174,17 +165,15 @@ namespace Backend.Data
                 var ownerId = reader.GetInt32(reader.GetOrdinal("OwnerID"));
                 result.Add(new Receipt(id, dateTime, shopName, ownerId));
             }
-
             Disconnect();
             return result;
         }
 
         public async Task DeleteReceipt(int id)
         {
-            if (!await ConnectAsync())
-                throw new InvalidOperationException("Could not establish a connection to the database.");
+            await TryToConnect();
 
-            await using var cmd = new NpgsqlCommand("DELETE FROM Receipts WHERE ID=@id", _connection);
+            await using var cmd = new NpgsqlCommand("DELETE FROM Receipt WHERE ID=@id", _connection);
             cmd.Parameters.AddWithValue("id", id);
 
             await cmd.ExecuteNonQueryAsync();
@@ -193,10 +182,9 @@ namespace Backend.Data
 
         public async Task AddReceipt(DateTime dateTime, string shopName, int ownerId)
         {
-            if (!await ConnectAsync())
-                throw new InvalidOperationException("Could not establish a connection to the database.");
+            await TryToConnect();
 
-            await using var cmd = new NpgsqlCommand("INSERT INTO Receipts VALUES (@date, @name, @id)", _connection);
+            await using var cmd = new NpgsqlCommand("INSERT INTO Receipt VALUES (@date, @name, @id)", _connection);
             cmd.Parameters.AddWithValue("date", dateTime);
             cmd.Parameters.AddWithValue("name", shopName);
             cmd.Parameters.AddWithValue("id", ownerId);
@@ -207,11 +195,10 @@ namespace Backend.Data
 
         public async Task AddProduct(string name, decimal price, decimal quantityWeight, string category, int ownerId)
         {
-            if (!await ConnectAsync())
-                throw new InvalidOperationException("Could not establish a connection to the database.");
+            await TryToConnect();
 
             await using var cmd =
-                new NpgsqlCommand("INSERT INTO Products VALUES (@name, @price, @quantityWeight, @category, @ownerId)",
+                new NpgsqlCommand("INSERT INTO Product VALUES (@name, @price, @quantityWeight, @category, @ownerId)",
                     _connection);
             cmd.Parameters.AddWithValue("name", name);
             cmd.Parameters.AddWithValue("price", price);
@@ -225,10 +212,9 @@ namespace Backend.Data
 
         public async Task<Product> GetProduct(int id)
         {
-            if (!await ConnectAsync())
-                throw new InvalidOperationException("Could not establish a connection to the database.");
+            await TryToConnect();
 
-            await using var cmd = new NpgsqlCommand("SELECT * FROM Products WHERE ID=@id", _connection);
+            await using var cmd = new NpgsqlCommand("SELECT * FROM Product WHERE ID=@id", _connection);
             cmd.Parameters.AddWithValue("id", id);
 
             await using var reader = await cmd.ExecuteReaderAsync();
@@ -266,10 +252,9 @@ namespace Backend.Data
 
         public async Task DeleteProduct(int id)
         {
-            if (!await ConnectAsync())
-                throw new InvalidOperationException("Could not establish a connection to the database.");
+            await TryToConnect();
 
-            await using var cmd = new NpgsqlCommand("DELETE FROM Products WHERE ID=@id", _connection);
+            await using var cmd = new NpgsqlCommand("DELETE FROM Product WHERE ID=@id", _connection);
             cmd.Parameters.AddWithValue("id", id);
 
             await cmd.ExecuteNonQueryAsync();
@@ -287,8 +272,7 @@ namespace Backend.Data
 
         private async Task<List<int>> GetProductsIdForReceipt(int receiptId)
         {
-            if (!await ConnectAsync())
-                throw new InvalidOperationException("Could not establish a connection to the database.");
+            await TryToConnect();
 
             await using var cmd = new NpgsqlCommand("SELECT * FROM ReceiptToProducts WHERE ReceiptID=@receiptId", _connection);
             cmd.Parameters.AddWithValue("receiptId", receiptId);
@@ -303,6 +287,37 @@ namespace Backend.Data
 
             Disconnect();
             return result;
+        }
+
+        public async Task<List<Receipt>> GetReceiptsBetweenDates(DateTime startDate, DateTime endDate, int ownerId)
+        {
+            await TryToConnect();
+
+            List<Receipt> result = new List<Receipt>();
+            //TODO repair query
+            await using var cmd =
+                new NpgsqlCommand("SELECT * FROM Receipt WHERE Date >= @startDate AND Date <= @endDate AND OwnerId = @ownerId", _connection);
+            cmd.Parameters.AddWithValue("startDate", startDate.ToString("d"));
+            cmd.Parameters.AddWithValue("endDate", endDate.ToString("d"));
+            cmd.Parameters.AddWithValue("ownerId", ownerId);
+            await using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                var id = reader.GetInt32(reader.GetOrdinal("ID"));
+                var date = reader.GetDateTime(reader.GetOrdinal("Date"));
+                var shopName = reader.GetString(reader.GetOrdinal("Shopname"));
+                result.Add(new Receipt(id, date, shopName, ownerId));
+            }
+
+            return result;
+        }
+
+        private async Task TryToConnect()
+        {
+            if (!await ConnectAsync())
+            {
+                throw new InvalidOperationException("Could not establish a connection to the database");
+            }
         }
     }
 }

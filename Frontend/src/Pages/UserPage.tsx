@@ -23,6 +23,7 @@ function UserPage() {
             if (response.ok) {
                 // redirect to main page
                 window.location.href = '/';
+                sessionStorage.setItem('userid', data.id);
             } else {
                 // show error message
                 alert('Invalid username or password');

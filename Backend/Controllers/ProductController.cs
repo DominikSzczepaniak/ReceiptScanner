@@ -24,7 +24,7 @@ public class ProductController(ProductService productService) : Controller
         }
     }
     
-    [HttpGet("receiptProducts/{receiptId}")]
+    [HttpGet("receipt/{receiptId}")]
     public async Task<IActionResult> ReceiptProducts(int receiptId)
     {
         try
