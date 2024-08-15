@@ -14,6 +14,15 @@ import argparse
 import scipy
 from imutils.perspective import four_point_transform
 
+def convertToNumeric(text):
+    beforeComma, afterComma = "", ""
+    for i in range(len(text)):
+        if(text[i] == ','):
+            beforeComma = text[0:i]
+            afterComma = text[i+1:]
+            break
+    return float(beforeComma + '.' + afterComma)
+
 ap = argparse.ArgumentParser()
 ap.add_argument("--i", "--image", required=True, help="path to input image")
 ap.add_argument("--d", "--debug", type=int, default=-1, help="whether or not to show extra debug information")
@@ -41,6 +50,9 @@ image = imutils.resize(image, width=500)
 ratio = orig.shape[1] / float(image.shape[1])
 
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+# border_size = 5
+# gray = cv2.copyMakeBorder(gray, border_size, border_size, border_size, border_size, cv2.BORDER_CONSTANT, value=[0, 0, 0])
+
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 edged = cv2.Canny(blurred, 75, 200)
 
@@ -59,7 +71,7 @@ if args["d"] > 0:
 ret, thresh = cv2.threshold(dilated.copy(), 127, 255, 0)
 cnts, abc = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 cnts = sorted(cnts, key=cv2.contourArea, reverse=True)
-#Add black border to image, so it will always have area of 4 corners to scan (dont count it to countours (either ignore or get second contour size))
+#Add black border to image (thresh image), so it will always have area of 4 corners to scan (dont count it to countours (either ignore or get second contour size))
 
 receiptCnt = None
 for c in cnts:
@@ -97,6 +109,13 @@ print()
 pattern = r'([0-9]+\,[0-9]+)'
 
 suma = r'SUM.'
+total = 0.0
 for row in text.split('\n'):
     if(re.search(pattern, row)):
         print(row)
+    if(re.search(suma, row)):
+        current = row.split()[2]
+        if(convertToNumeric(current) > total):
+            total = convertToNumeric(current)
+print(total)
+
