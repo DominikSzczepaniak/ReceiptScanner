@@ -1,6 +1,7 @@
 import ReceiptCard from "../components/ReceiptCard";
 import { serverLink } from "../settings";
 import translations from "../translations/pl.json";
+import axios from 'axios';
 
 function MainPage() {
   if(sessionStorage.getItem("userid") == null){
@@ -55,7 +56,7 @@ function MainPage() {
     let day = date.getDate();
     let month = date.getMonth();
     let year = date.getFullYear();
-    return `${day}-${month}-${year}`;
+    return `${year}-${month}-${day}`;
   }
 
   async function thisMonthSpending(){
