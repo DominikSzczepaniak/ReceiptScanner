@@ -51,6 +51,13 @@ public class ReceiptService(IDatabaseHandler databaseConnection, ProductService 
         return result;
     }
 
+    public async Task<(List<Receipt>, decimal)> GetMainPageData(DateTime startDate, DateTime endDate, int ownerId)
+    {
+        var receipts = await GetReceiptsBetweenDates(startDate, endDate, ownerId);
+        var totalSpending = await GetTotalSpendingBetweenDates(startDate, endDate, ownerId);
+        return (receipts, totalSpending);
+    }
+
     public async Task DeleteReceipt(int id) //TODO delete also from ReceiptToProducts database
     {
         await databaseConnection.DeleteReceiptProducts(id);

@@ -19,10 +19,10 @@ class Program
             Console.WriteLine("Connection string is not established");
             return;
         }
+
         PostgresConnection.ConnectionString = connectionString;
-        var connection = new PostgresConnection();
-        connection.ConnectAsync().GetAwaiter().GetResult();
-        builder.Services.AddSingleton<IDatabaseHandler>(connection);
+        builder.Services.AddSingleton<IDatabaseHandler, PostgresConnection>();
+        builder.Services.AddHostedService<DatabaseInitializer>();
         builder.Services.AddSingleton<UserService>();
         builder.Services.AddSingleton<ProductService>();
         builder.Services.AddSingleton<ReceiptService>();

@@ -11,6 +11,7 @@ namespace Backend.Data
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
+        public Task ConnectAsync();
         public Task<User> GetUserData(string username, string password);
 
         public Task RegisterUser(string username, string password);

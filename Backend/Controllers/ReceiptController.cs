@@ -69,6 +69,23 @@ public class ReceiptController(ReceiptService receiptService, ProductService pro
         }
     }
 
+    [HttpGet("mainPageData/{startDate}/{endDate}/{ownerId}")]
+    public async Task<IActionResult> GetMainPageData(DateTime startDate, DateTime endDate, int ownerId)
+    {
+        try
+        {
+            var result = await receiptService.GetMainPageData(startDate, endDate, ownerId);
+            var receipts = result.Item1;
+            var total = result.Item2;
+            var response = new MainPageData(receipts, total);
+            return Ok(response);
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new HttpRequestException(HttpRequestError.ConnectionError, ex.Message);
+        }
+    }
+
     [HttpDelete("{receiptId}")]
     public async Task<IActionResult> DeleteReceipt(int receiptId)
     {

@@ -11,18 +11,16 @@ namespace Backend.Data
         {
             Disconnect();
         }
-        public async Task<bool> ConnectAsync()
+        public async Task ConnectAsync()
         {
             try
             {
                 _connection = new NpgsqlConnection(ConnectionString);
                 await _connection.OpenAsync();
-                return _connection.State == System.Data.ConnectionState.Open;
             }
             catch (Exception ex)
             {
                 Console.Error.WriteLine(ex.Message);
-                return false;
             }
         }
 
@@ -266,10 +264,7 @@ namespace Backend.Data
         {
             List<Receipt> result = new List<Receipt>();
             await using var cmd =
-                new NpgsqlCommand("SELECT * FROM Receipt WHERE Date >= @startDate AND Date <= @endDate AND OwnerId = @ownerId", _connection);
-            cmd.Parameters.AddWithValue("startDate", startDate.ToString("d"));
-            cmd.Parameters.AddWithValue("endDate", endDate.ToString("d"));
-            cmd.Parameters.AddWithValue("ownerId", ownerId);
+                new NpgsqlCommand($"SELECT * FROM Receipt WHERE Date >= '{startDate:yyyy-MM-dd}' AND Date <= '{endDate:yyyy-MM-dd}' AND OwnerId = {ownerId}", _connection);
             await using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
@@ -280,14 +275,6 @@ namespace Backend.Data
             }
 
             return result;
-        }
-
-        private async Task TryToConnect()
-        {
-            if (!await ConnectAsync())
-            {
-                throw new InvalidOperationException("Could not establish a connection to the database");
-            }
         }
     }
 }
