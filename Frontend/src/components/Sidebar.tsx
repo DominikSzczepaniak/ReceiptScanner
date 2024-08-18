@@ -9,6 +9,8 @@ function Sidebar(props: SidebarProps) {
     const sidebarRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);  // Start with the sidebar closed
     const [width, setWidth] = useState(window.innerWidth);
+    const isLoggedIn = sessionStorage.getItem("userid") !== null;
+    const visibleForLoggedCSS = (isLogged: boolean) => (isLogged ? '' : 'hidden');
 
     const toggleIsOpen = () => {
         setIsOpen(!isOpen);
@@ -19,6 +21,11 @@ function Sidebar(props: SidebarProps) {
             setIsOpen(false);
         }
     };
+
+    const handleLogout = () => {
+        sessionStorage.removeItem("userid");
+        window.location.href = "/login";
+    }
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
@@ -70,8 +77,10 @@ function Sidebar(props: SidebarProps) {
                         >
                             &times;
                         </button>
-                        <Link to="/" className="block mb-4" onClick={toggleIsOpen}>Home</Link>
-                        <Link to="/login" className="block mb-4" onClick={toggleIsOpen}>Login</Link>
+                        <Link to="/" className={`block mb-4 ${visibleForLoggedCSS(isLoggedIn)}`} onClick={toggleIsOpen}>Home</Link>
+                        <Link to="/login" className={`block mb-4 ${visibleForLoggedCSS(!isLoggedIn)}`} onClick={toggleIsOpen}>Login</Link>
+                        <Link to="/register" className={`block mb-4 ${visibleForLoggedCSS(!isLoggedIn)}`} onClick={toggleIsOpen}>Register</Link>
+                        <p onClick={handleLogout} className={`absolute bottom-1.5 ${visibleForLoggedCSS(isLoggedIn)} cursor-pointer`}>Logout</p>
                     </div>
                 )}
             </div>

@@ -13,19 +13,23 @@ function MainPage() {
 
   const userID = sessionStorage.getItem("userid");
   const [receiptCards, setReceiptCards] = useState<JSX.Element[]>([]);
+  const [thisMonthSpending, setThisMonthSpending] = useState<number>(0.0);
 
-  async function getLastFourReceipts() {
-    try {
-      const response = await axios.get(`${serverLink}/Receipt/receipts/${userID}`);
-      if (response.status !== 200) {
+  async function fetchData(){
+    const currentMonth = new Date().getMonth()+1;
+    const startDate = parseToDate(new Date(new Date().getFullYear(), currentMonth, 1));
+    const endDate = parseToDate(new Date(new Date().getFullYear(), currentMonth + 1, 1));
+    try{
+      const response = await axios.get(`${serverLink}/Receipt/mainPageData/${startDate}/${endDate}/${userID}`);
+      if(response.status !== 200){
         throw new Error('Network response was not ok');
       }
-      const data = await response.data;
-
-      return data.slice(0, Math.min(data.length, 4));
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-      alert('Failed to login. Please try again later.');
+      const lastFourReceipts = response.data.receipts.slice(0, Math.min(response.data.receipts.length, 4));
+      const lastMonthSpendings = response.data.total;
+      return {lastFourReceipts, lastMonthSpendings};
+    }
+    catch(error){
+      alert('There was a problem getting your data');
       return null;
     }
   }
@@ -39,12 +43,9 @@ function MainPage() {
       if (response.data.length === 0) {
         return [];
       }
-      const data = await response.data;
-
-      return data;
+      return await response.data;
     } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-      alert('Failed to login. Please try again later.');
+      alert('There was a problem getting products for your receipts');
       return null;
     }
   }
@@ -62,53 +63,23 @@ function MainPage() {
     return { products, total };
   }
 
-  // function parseToDate(date: Date){
-  //   let _date = new Date(date);
-  //   let day = _date.getDate();
-  //   let month = _date.getMonth();
-  //   let year = _date.getFullYear();
-  //   return `${year}-${month}-${day}`;
-  // }
-
-  // async function thisMonthSpending(){
-  //   const currentMonth = new Date().getMonth();
-  //   const startDate = parseToDate(new Date(new Date().getFullYear(), currentMonth, 1));
-  //   const endDate = parseToDate(new Date(new Date().getFullYear(), currentMonth + 1, 1));
-
-  //   try {
-  //       const response = await fetch(`${serverLink}/Receipt/totalSpending/${startDate}/${endDate}/${userID}`, {
-  //           method: 'GET', 
-  //           headers: {
-  //               'Content-Type': 'application/json',
-  //           },
-  //       });
-
-  //       if (!response.ok) {
-  //           throw new Error('Network response was not ok');
-  //       }
-
-  //       const data = await response.json();
-
-  //       if (response.ok) {
-  //           return data;
-  //       } else {
-  //           alert('Invalid username or password');
-  //       }
-  //       return null;
-  //   } catch (error) {
-  //       console.error('There was a problem with the fetch operation:', error);
-  //       alert('Failed to login. Please try again later.');
-  //       return null;
-  //   }
-  // }
-
+  function parseToDate(date: Date){
+    let _date = new Date(date);
+    let day = _date.getDate();
+    let month = _date.getMonth();
+    let year = _date.getFullYear();
+    return `${year}-${month}-${day}`;
+  }
 
   useEffect(() => {
-    const fetchReceipts = setTimeout(async () => {
-      const receipts = await getLastFourReceipts(); 
-      if (receipts === null) {
+    const fetchDataForMainPage = setTimeout(async () => {
+      const data = await fetchData();
+      if(data === null){
         return;
       }
+      const receipts = data.lastFourReceipts;
+      const lastMonthSpendings = data.lastMonthSpendings;
+      console.log(lastMonthSpendings);
       const generatedCards = await Promise.all(receipts.map(async (receipt: Receipt) => {
         const { items, total } = await getReceiptItemsAndTotal(receipt.id);
         return (
@@ -122,26 +93,18 @@ function MainPage() {
         );
       }));
       setReceiptCards(generatedCards);
-    }, 200);
-    
-    return () => clearTimeout(fetchReceipts);
+      setThisMonthSpending(lastMonthSpendings);
+    }, 150);
+    return () => clearTimeout(fetchDataForMainPage);
   }, []);
-
-
-  // let thisMonthSpendingResult = 0.0;
-  // thisMonthSpending().then((result) => {
-  //   thisMonthSpendingResult = result;
-  // });
-
-  let thisMonthSpendingResult = 0.0;
 
   return (
     <>
+      <p>{translations.youSpentThisMonth} {thisMonthSpending}</p>
       <p>{translations.lastFourReceipts}</p>
       <div className="flex wrap overflow-hidden flex-wrap">
         {receiptCards}
       </div>
-      <p>{translations.youSpentThisMonth} {thisMonthSpendingResult}</p>
     </>
   )
 }
