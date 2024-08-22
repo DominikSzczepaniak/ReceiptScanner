@@ -1,4 +1,5 @@
 #Right now it's needed to make a photo with all corners of receipt visible. Otherwise it will not work properly. 
+#How about writing deep learning model that will automatically zoom into receipt and return it? Then we can just OCR it
 import PIL.Image
 import numpy as np
 import pandas as pd
