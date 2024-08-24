@@ -250,3 +250,4 @@ src/.vs/config/applicationhost.config
 .idea/
 
 ReceiptReader/data/*
+ReceiptReader/yolov5/*
