@@ -1,1 +1,0 @@
-#Login into biedronka website, download receipt, OCR it and save it - pdf is ready to OCR as its perfect condition
