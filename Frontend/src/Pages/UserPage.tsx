@@ -33,10 +33,13 @@ function UserPage() {
         <div>
             <p className="Text">Please enter your login credentials</p>
             <fieldset className="Fieldset">
-                <label className="border-solid border-2 border-sky-500" htmlFor="username">
+                <label className="border-solid border-2 border-sky-500" htmlFor="username" >
                     Username
                 </label>
-                <input className="border-solid border-2 border-sky-500" id="username" defaultValue="Username" />
+                <input className="border-solid border-2 border-sky-500" id="username" defaultValue="Username" onFocus = {(e) => {
+                    if(e.target.value === "Username") {
+                        e.target.value = '';
+                    }}} />
             </fieldset>
             <fieldset className="Fieldset">
                 <label className="border-solid border-2 border-sky-500" htmlFor="password">
