@@ -64,10 +64,10 @@ function MainPage() {
   }
 
   function parseToDate(date: Date){
-    let _date = new Date(date);
-    let day = _date.getDate();
-    let month = _date.getMonth();
-    let year = _date.getFullYear();
+    const _date = new Date(date);
+    const day = _date.getDate();
+    const month = _date.getMonth();
+    const year = _date.getFullYear();
     return `${year}-${month}-${day}`;
   }
 

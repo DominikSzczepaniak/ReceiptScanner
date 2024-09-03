@@ -2,16 +2,12 @@ import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 
 interface NavbarProps{
-    //take multiple children
     children?: React.ReactNode;
 }
 
 function Navbar(props: NavbarProps) {
     const { children } = props;
-
-    let [showbar, setShowbar] = useState(false);
-
-    let sideBar = <Sidebar />;
+    const [showbar, setShowbar] = useState(false);
 
     const handleShowbarOpening = () => {
         setShowbar(true);
@@ -23,7 +19,7 @@ function Navbar(props: NavbarProps) {
                 <button className="text-xl text-black float-left" onClick={handleShowbarOpening}>≡</button>
                 <span>""</span>
             </div>
-            {showbar && sideBar}
+            {showbar && <Sidebar />}
             {children}
         </>
     )

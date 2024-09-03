@@ -51,11 +51,11 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({ ShopName, ReceiptDate, Total,
         };
     }, []);
 
-    let _date = new Date(ReceiptDate);
-    let day = _date.getDate();
-    let month = _date.getMonth();
-    let year = _date.getFullYear();
-    let dateString = `${year}-${month}-${day}`;
+    const _date = new Date(ReceiptDate);
+    const day = _date.getDay();
+    const month = _date.getMonth();
+    const year = _date.getFullYear();
+    const dateString = `${year}-${month}-${day}`;
 
 
     return (

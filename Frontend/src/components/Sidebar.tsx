@@ -7,7 +7,7 @@ interface SidebarProps {
 
 function Sidebar(props: SidebarProps) {
     const sidebarRef = useRef<HTMLDivElement>(null);
-    const [isOpen, setIsOpen] = useState(false);  // Start with the sidebar closed
+    const [isOpen, setIsOpen] = useState(false);
     const [width, setWidth] = useState(window.innerWidth);
     const isLoggedIn = sessionStorage.getItem("userid") !== null;
     const visibleForLoggedCSS = (isLogged: boolean) => (isLogged ? '' : 'hidden');
@@ -46,11 +46,11 @@ function Sidebar(props: SidebarProps) {
         }
     });
 
-    
-    let screenWidth = width;
-    let sideBarWidth = screenWidth * 0.2;
-    let mainSizeWidth = screenWidth - sideBarWidth - 20;
-    let mainSize = mainSizeWidth.toString() + "px";
+
+    const screenWidth = width;
+    const sideBarWidth = screenWidth * 0.2;
+    const mainSizeWidth = screenWidth - sideBarWidth - 20;
+    const mainSize = mainSizeWidth.toString() + "px";
 
     return (
         <>
@@ -59,7 +59,7 @@ function Sidebar(props: SidebarProps) {
                 <div
                     className="fixed inset-0 bg-black bg-opacity-50"
                     style={{ zIndex: 998 }}
-                    onClick={toggleIsOpen} // Clicking the backdrop will close the sidebar
+                    onClick={toggleIsOpen}
                 />
             )}
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { serverLink } from "../settings";
+import { v4 as uuid } from 'uuid';
 
 export default function AddReceipt(){
     const [state, setState] = useState<{file: FormData | null}>({file: null});
@@ -10,16 +11,18 @@ export default function AddReceipt(){
         if(e.target.files === null){
             return;
         }
-        let file = e.target.files[0];
-        let form = new FormData();
+        const file = e.target.files[0];
+        const form = new FormData();
         form.append('file', file);
         setState({file: form});
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await fetch(`${serverLink}/upload`, {
+        const imageId = uuid();
+        await fetch(`${serverLink}/uploadImage/${imageId}`, {
             method: 'POST',
+            mode: 'cors',
             body: state.file
         })
         .then(response => response.json())
