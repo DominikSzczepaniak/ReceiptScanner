@@ -446,6 +446,15 @@ video {
   display: none;
 }
 
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
@@ -618,6 +627,10 @@ video {
   display: flex;
 }
 
+.table {
+  display: table;
+}
+
 .hidden {
   display: none;
 }
@@ -628,6 +641,10 @@ video {
 
 .h-1\/4 {
   height: 25%;
+}
+
+.h-10 {
+  height: 2.5rem;
 }
 
 .h-full {
@@ -650,8 +667,20 @@ video {
   width: 20%;
 }
 
+.w-\[100px\] {
+  width: 100px;
+}
+
+.w-full {
+  width: 100%;
+}
+
 .w-screen {
   width: 100vw;
+}
+
+.caption-bottom {
+  caption-side: bottom;
 }
 
 .cursor-pointer {
@@ -670,12 +699,16 @@ video {
   justify-content: flex-end;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
 
 .rounded-lg {
-  border-radius: 0.5rem;
+  border-radius: var(--radius);
 }
 
 .border {
@@ -688,6 +721,14 @@ video {
 
 .border-8 {
   border-width: 8px;
+}
+
+.border-b {
+  border-bottom-width: 1px;
+}
+
+.border-t {
+  border-top-width: 1px;
 }
 
 .border-solid {
@@ -728,6 +769,14 @@ video {
   background-color: rgb(22 163 74 / var(--tw-bg-opacity));
 }
 
+.bg-muted\/50 {
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+.bg-primary {
+  background-color: hsl(var(--primary));
+}
+
 .bg-secondary-color {
   background-color: var(--secondary-color);
 }
@@ -736,8 +785,34 @@ video {
   --tw-bg-opacity: 0.5;
 }
 
+.p-2 {
+  padding: 0.5rem;
+}
+
 .p-4 {
   padding: 1rem;
+}
+
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.align-middle {
+  vertical-align: middle;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 .text-xl {
@@ -745,13 +820,29 @@ video {
   line-height: 1.75rem;
 }
 
+.font-medium {
+  font-weight: 500;
+}
+
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
+.text-muted-foreground {
+  color: hsl(var(--muted-foreground));
+}
+
+.text-primary-foreground {
+  color: hsl(var(--primary-foreground));
+}
+
 .text-text-color {
   color: var(--text-color);
+}
+
+.text-primary-color {
+  color: var(--primary-color);
 }
 
 .transition-all {
@@ -760,8 +851,32 @@ video {
   transition-duration: 150ms;
 }
 
+.transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
 .duration-300 {
   transition-duration: 300ms;
+}
+
+@keyframes enter {
+  from {
+    opacity: var(--tw-enter-opacity, 1);
+    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0) scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1)) rotate(var(--tw-enter-rotate, 0));
+  }
+}
+
+@keyframes exit {
+  to {
+    opacity: var(--tw-exit-opacity, 1);
+    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0));
+  }
+}
+
+.duration-300 {
+  animation-duration: 300ms;
 }
 
 .root,
@@ -770,4 +885,79 @@ video {
   --primary-color: #039717;
   --secondary-color: #444444;
   --text-color: #fff;
+}
+
+:root  {
+  --background: 116 0% 95%;
+  --foreground: 116 0% 0%;
+  --card: 116 0% 90%;
+  --card-foreground: 116 0% 10%;
+  --popover: 116 0% 95%;
+  --popover-foreground: 116 95% 0%;
+  --primary: 116 93% 33%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 116 10% 70%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 78 10% 85%;
+  --muted-foreground: 116 0% 35%;
+  --accent: 78 10% 80%;
+  --accent-foreground: 116 0% 10%;
+  --destructive: 0 50% 30%;
+  --destructive-foreground: 116 0% 90%;
+  --border: 116 20% 50%;
+  --input: 116 20% 18%;
+  --ring: 116 93% 33%;
+  --radius: 0.75rem;
+}
+
+.dark  {
+  --background: 116 10% 5%;
+  --foreground: 116 0% 90%;
+  --card: 116 0% 0%;
+  --card-foreground: 116 0% 90%;
+  --popover: 116 10% 5%;
+  --popover-foreground: 116 0% 90%;
+  --primary: 116 93% 33%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 116 10% 10%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 78 10% 15%;
+  --muted-foreground: 116 0% 60%;
+  --accent: 78 10% 15%;
+  --accent-foreground: 116 0% 90%;
+  --destructive: 0 50% 30%;
+  --destructive-foreground: 116 0% 90%;
+  --border: 116 20% 18%;
+  --input: 116 20% 18%;
+  --ring: 116 93% 33%;
+  --radius: 0.75rem;
+}
+
+.hover\:bg-muted\/50:hover {
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+.data-\[state\=selected\]\:bg-muted[data-state=selected] {
+  background-color: hsl(var(--muted));
+}
+
+.\[\&\:has\(\[role\=checkbox\]\)\]\:pr-0:has([role=checkbox]) {
+  padding-right: 0px;
+}
+
+.\[\&\>\[role\=checkbox\]\]\:translate-y-\[2px\]>[role=checkbox] {
+  --tw-translate-y: 2px;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.\[\&\>tr\]\:last\:border-b-0:last-child>tr {
+  border-bottom-width: 0px;
+}
+
+.\[\&_tr\:last-child\]\:border-0 tr:last-child {
+  border-width: 0px;
+}
+
+.\[\&_tr\]\:border-b tr {
+  border-bottom-width: 1px;
 }

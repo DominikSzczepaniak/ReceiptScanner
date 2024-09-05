@@ -9,3 +9,60 @@
   --secondary-color: #444444;
   --text-color: #fff;
 }
+
+
+:root  {
+  --background: 116 0% 95%;
+  --foreground: 116 0% 0%;
+  --card: 116 0% 90%;
+  --card-foreground: 116 0% 10%;
+  --popover: 116 0% 95%;
+  --popover-foreground: 116 95% 0%;
+  --primary: 116 93% 33%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 116 10% 70%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 78 10% 85%;
+  --muted-foreground: 116 0% 35%;
+  --accent: 78 10% 80%;
+  --accent-foreground: 116 0% 10%;
+  --destructive: 0 50% 30%;
+  --destructive-foreground: 116 0% 90%;
+  --border: 116 20% 50%;
+  --input: 116 20% 18%;
+  --ring: 116 93% 33%;
+  --radius: 0.75rem;
+}
+.dark  {
+  --background: 116 10% 5%;
+  --foreground: 116 0% 90%;
+  --card: 116 0% 0%;
+  --card-foreground: 116 0% 90%;
+  --popover: 116 10% 5%;
+  --popover-foreground: 116 0% 90%;
+  --primary: 116 93% 33%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 116 10% 10%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 78 10% 15%;
+  --muted-foreground: 116 0% 60%;
+  --accent: 78 10% 15%;
+  --accent-foreground: 116 0% 90%;
+  --destructive: 0 50% 30%;
+  --destructive-foreground: 116 0% 90%;
+  --border: 116 20% 18%;
+  --input: 116 20% 18%;
+  --ring: 116 93% 33%;
+  --radius: 0.75rem;
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

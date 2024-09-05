@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import translations from "../translations/pl.json";
 
 interface SidebarProps {
     children?: React.ReactNode;
@@ -77,11 +78,12 @@ function Sidebar(props: SidebarProps) {
                         >
                             &times;
                         </button>
-                        <Link to="/" className={`block mb-4 ${visibleForLoggedCSS(isLoggedIn)}`} onClick={toggleIsOpen}>Home</Link>
-                        <Link to="/login" className={`block mb-4 ${visibleForLoggedCSS(!isLoggedIn)}`} onClick={toggleIsOpen}>Login</Link>
-                        <Link to="/register" className={`block mb-4 ${visibleForLoggedCSS(!isLoggedIn)}`} onClick={toggleIsOpen}>Register</Link>
-                        <Link to="/add" className={`block mb-4 ${visibleForLoggedCSS(isLoggedIn)}`} onClick={toggleIsOpen}>Add Receipt</Link>
-                        <p onClick={handleLogout} className={`absolute bottom-1.5 ${visibleForLoggedCSS(isLoggedIn)} cursor-pointer`}>Logout</p>
+                        <Link to="/" className={`block mb-4 ${visibleForLoggedCSS(isLoggedIn)}`} onClick={toggleIsOpen}>{translations.sidebar.home}</Link>
+                        <Link to="/login" className={`block mb-4 ${visibleForLoggedCSS(!isLoggedIn)}`} onClick={toggleIsOpen}>{translations.sidebar.login}</Link>
+                        <Link to="/register" className={`block mb-4 ${visibleForLoggedCSS(!isLoggedIn)}`} onClick={toggleIsOpen}>{translations.sidebar.register}</Link>
+                        <Link to="/add" className={`block mb-4 ${visibleForLoggedCSS(isLoggedIn)}`} onClick={toggleIsOpen}>{translations.sidebar.addReceipt}</Link>
+                        <Link to="/receipts" className={`block mb-4 ${visibleForLoggedCSS(isLoggedIn)}`} onClick={toggleIsOpen}>{translations.sidebar.myReceipts}</Link>
+                        <p onClick={handleLogout} className={`absolute bottom-1.5 ${visibleForLoggedCSS(isLoggedIn)} cursor-pointer`}>{translations.sidebar.logout}</p>
                     </div>
                 )}
             </div>
