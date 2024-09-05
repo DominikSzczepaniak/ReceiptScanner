@@ -446,34 +446,6 @@ video {
   display: none;
 }
 
-:root {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 142.1 76.2% 36.3%;
-  --primary-foreground: 355.7 100% 97.3%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 142.1 76.2% 36.3%;
-  --radius: 0.5rem;
-  --chart-1: 12 76% 61%;
-  --chart-2: 173 58% 39%;
-  --chart-3: 197 37% 24%;
-  --chart-4: 43 74% 66%;
-  --chart-5: 27 87% 67%;
-}
-
 * {
   border-color: hsl(var(--border));
 }
@@ -801,6 +773,10 @@ body {
   background-color: hsl(var(--muted) / 0.5);
 }
 
+.bg-primary {
+  background-color: hsl(var(--primary));
+}
+
 .bg-secondary-color {
   background-color: var(--secondary-color);
 }
@@ -857,8 +833,16 @@ body {
   color: hsl(var(--muted-foreground));
 }
 
+.text-primary-foreground {
+  color: hsl(var(--primary-foreground));
+}
+
 .text-text-color {
   color: var(--text-color);
+}
+
+.text-primary-color {
+  color: var(--primary-color);
 }
 
 .transition-all {
@@ -901,6 +885,52 @@ body {
   --primary-color: #039717;
   --secondary-color: #444444;
   --text-color: #fff;
+}
+
+:root  {
+  --background: 116 0% 95%;
+  --foreground: 116 0% 0%;
+  --card: 116 0% 90%;
+  --card-foreground: 116 0% 10%;
+  --popover: 116 0% 95%;
+  --popover-foreground: 116 95% 0%;
+  --primary: 116 93% 33%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 116 10% 70%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 78 10% 85%;
+  --muted-foreground: 116 0% 35%;
+  --accent: 78 10% 80%;
+  --accent-foreground: 116 0% 10%;
+  --destructive: 0 50% 30%;
+  --destructive-foreground: 116 0% 90%;
+  --border: 116 20% 50%;
+  --input: 116 20% 18%;
+  --ring: 116 93% 33%;
+  --radius: 0.75rem;
+}
+
+.dark  {
+  --background: 116 10% 5%;
+  --foreground: 116 0% 90%;
+  --card: 116 0% 0%;
+  --card-foreground: 116 0% 90%;
+  --popover: 116 10% 5%;
+  --popover-foreground: 116 0% 90%;
+  --primary: 116 93% 33%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 116 10% 10%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 78 10% 15%;
+  --muted-foreground: 116 0% 60%;
+  --accent: 78 10% 15%;
+  --accent-foreground: 116 0% 90%;
+  --destructive: 0 50% 30%;
+  --destructive-foreground: 116 0% 90%;
+  --border: 116 20% 18%;
+  --input: 116 20% 18%;
+  --ring: 116 93% 33%;
+  --radius: 0.75rem;
 }
 
 .hover\:bg-muted\/50:hover {

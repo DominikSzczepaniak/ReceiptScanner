@@ -44,7 +44,7 @@ function ReceiptTable() {
         if (receipts.length > 0) {
             const fetchData = setTimeout(() => {
                 fetchReceiptTotals(receipts);
-            }, 50);
+            }, 100);
             return () => clearTimeout(fetchData);
         }
     }, [receipts]);
