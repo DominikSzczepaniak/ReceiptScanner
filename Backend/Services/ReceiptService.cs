@@ -7,19 +7,8 @@ public class ReceiptService(IDatabaseHandler databaseConnection, ProductService 
 {
     public async Task<Receipt> GetReceiptData(int id)
     {
-        try
-        {
-            var receipt = await databaseConnection.GetReceiptData(id);
-            return receipt;
-        }
-        catch (InvalidOperationException ex)
-        {
-            throw new InvalidOperationException(ex.Message);
-        }
-        catch (ArgumentException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
+        var receipt = await databaseConnection.GetReceiptData(id);
+        return receipt;
     }
 
     public async Task<List<Receipt>> GetReceiptsForUser(int ownerId)
@@ -66,13 +55,6 @@ public class ReceiptService(IDatabaseHandler databaseConnection, ProductService 
 
     public async Task AddReceipt(DateTime dateTime, string shopName, int ownerId)
     {
-        try
-        {
-            await databaseConnection.AddReceipt(dateTime, shopName, ownerId);
-        }
-        catch (InvalidOperationException ex)
-        {
-            throw new InvalidOperationException(ex.Message);
-        }
+        await databaseConnection.AddReceipt(dateTime, shopName, ownerId);
     }
 }

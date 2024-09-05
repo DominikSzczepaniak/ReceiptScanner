@@ -18,6 +18,5 @@
             this.OwnerID = ownerid;
             this.Category = category;
         }
-        
     }
 }
