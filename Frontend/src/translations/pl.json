@@ -21,6 +21,7 @@
         "productName": "Nazwa produktu",
         "price": "Cena",
         "amount": "Ilość",
-        "category": "Kategoria"
+        "category": "Kategoria",
+        "noCategory": "Nieokreślona"
     }
 }

@@ -37,9 +37,9 @@ function ReceiptInfoTable(props: ReceiptInfoTableProps) {
                 <TableBody>
                     {products.map((product) => (
                         <TableRow key={product.id}>
-                            <TableCell>{product.name}</TableCell>
+                            <TableCell>{product.name[0].toUpperCase() + product.name.slice(1, product.name.length)} </TableCell>
                             <TableCell>{product.quantityWeight}</TableCell>
-                            <TableCell>{product.category}</TableCell>
+                            <TableCell>{product.category ? product.category : translations.products.noCategory}</TableCell>
                             <TableCell className="text-right">{product.price}</TableCell>
                         </TableRow>
                     ))}
