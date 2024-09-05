@@ -16,5 +16,11 @@
         "addReceipt": "Dodaj nowy paragon",
         "myReceipts": "Moje paragony",
         "logout": "Wyloguj się"
+    },
+    "products": {
+        "productName": "Nazwa produktu",
+        "price": "Cena",
+        "amount": "Ilość",
+        "category": "Kategoria"
     }
 }

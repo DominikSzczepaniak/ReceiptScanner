@@ -4,6 +4,7 @@ import Login from './Pages/UserPage';
 import AddReceipt from './Pages/AddReceipt';
 import Sidebar from './components/Sidebar';
 import MyReceipts from "@/Pages/MyReceipts.tsx";
+import ReceiptInfo from "@/Pages/ReceiptInfo.tsx";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/add" element={<AddReceipt />} />
           <Route path="/receipts" element={<MyReceipts />} />
+          <Route path="/receipt/:id" element={<ReceiptInfo />} />
         </Routes>
       </Sidebar>
     </BrowserRouter>
