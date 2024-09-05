@@ -1,4 +1,20 @@
 {
     "lastFourReceipts": "Ostatnie 4 paragony:",
-    "youSpentThisMonth": "Wydałeś w tym miesiącu:"    
+    "youSpentThisMonth": "Wydałeś w tym miesiącu:",
+    "listOfReceipts": "Lista Twoich ostatnich paragonów",
+    "receipts": {
+        "receipt": "Paragon",
+        "priceAmount": "Kwota",
+        "date": "Data",
+        "shopName": "Nazwa sklepu",
+        "receiptInfo": "Szczegóły"
+    },
+    "sidebar": {
+        "home": "Strona główna",
+        "login": "Zaloguj się",
+        "register": "Zarejestruj się",
+        "addReceipt": "Dodaj nowy paragon",
+        "myReceipts": "Moje paragony",
+        "logout": "Wyloguj się"
+    }
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {parseDate} from "@/helpers/parseDate.ts";
 
 interface ReceiptItem {
     Name: string;
@@ -51,18 +52,11 @@ const ReceiptCard: React.FC<ReceiptCardProps> = ({ ShopName, ReceiptDate, Total,
         };
     }, []);
 
-    const _date = new Date(ReceiptDate);
-    const day = _date.getDay();
-    const month = _date.getMonth();
-    const year = _date.getFullYear();
-    const dateString = `${year}-${month}-${day}`;
-
-
     return (
         <div className={`h-1/4 p-4 rounded-lg border-8 border-solid border-primary-color bg-secondary-color text-text-color m-4`} style={{ width: cardWidth + "px" }}>
             <div className="receipt-card-header">
                 <h3>{ShopName}</h3>
-                <p>{dateString}</p>
+                <p>{parseDate(ReceiptDate)}</p>
                 <h4>Total: {Total}</h4>
             </div>
             <div className="receipt-card-body">
