@@ -1,0 +1,3 @@
+docker run --gpus all -it --name my-deep-learning-model -v $(pwd)/images:/app/images -v $(pwd)/output:/app/output deep-learning-model nazwa_pliku.png
+
+winpty docker run --gpus all -it -v C:\\Users\\szcze\\Desktop\\ReceiptScanner\\ReceiptReader\\images:/app/images -v C:\\Users\\szcze\\Desktop\\ReceiptScanner\\ReceiptReader\\output:/app/output reader-model nazwa_pliku.png

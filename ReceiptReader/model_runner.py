@@ -1,5 +1,6 @@
 import subprocess
 import os
+import argparse
 from PIL import Image
 
 def detect(image_path, image_name, output_folder):
@@ -12,8 +13,12 @@ def get_highest_file_number(directory):
     return id
 
 if __name__ == "__main__":
-    filename = input("Enter the filename: ")
+    parser = argparse.ArgumentParser(description="Deep Learning Model")
+    parser.add_argument("image_path", type=str, help="Ścieżka do pliku obrazu")
+    args = parser.parse_args()
+    
+    filename = args.image_path
     image_path = f"images/{filename}"
     output_folder = get_highest_file_number("output/") + 1
     detect(image_path, filename, output_folder)
-    img = Image.open(f"output/{output_folder}/{filename}")
+    print("Done")
