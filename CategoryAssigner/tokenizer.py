@@ -12,7 +12,7 @@ def tokenize(script_args : list[str]) -> list[str]:
     pattern : str = r"--\S+"
     match = re.search(pattern=pattern, string=args_string)
 
-    language : str = match.group() if match != None else ''
+    language : str = match.group()[2:] if match != None else ''
 
     # Get food name
     food : str = ' '.join(script_args[:len(script_args) - 1]) if language != '' else ' '.join(script_args)
