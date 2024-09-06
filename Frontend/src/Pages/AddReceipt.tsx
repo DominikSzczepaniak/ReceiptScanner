@@ -32,7 +32,14 @@ export default function AddReceipt() {
 
     const divElement = state.file === null ?
         <span className="text-black">{translations.addReceiptPage.clickToSendPhoto}</span> :
-        <span className="text-black">{translations.addReceiptPage.successfullySentPhoto}</span>; //TODO - show image there
+        (
+            fileInputRef.current?.files && fileInputRef.current.files[0] ? (
+                <img
+                    src={URL.createObjectURL(fileInputRef.current.files[0])}
+                    alt="uploaded receipt"
+                    className="max-w-full max-h-full object-contain"
+                />
+            ) : null);
 
 
     const handleFileImport = (e: React.ChangeEvent<HTMLInputElement>) => {
