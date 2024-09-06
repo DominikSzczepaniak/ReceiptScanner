@@ -65,6 +65,7 @@ function Sidebar(props: SidebarProps) {
             )}
 
             {/* Sidebar Modal */}
+            {isLoggedIn && (
             <div
                 ref={sidebarRef}
                 className={`fixed top-0 left-0 h-screen bg-gray-400 ${isOpen ? 'w-1/5' : 'w-0'} transition-all duration-300 overflow-hidden`}
@@ -86,10 +87,10 @@ function Sidebar(props: SidebarProps) {
                         <p onClick={handleLogout} className={`absolute bottom-1.5 ${visibleForLoggedCSS(isLoggedIn)} cursor-pointer`}>{translations.sidebar.logout}</p>
                     </div>
                 )}
-            </div>
+            </div>)}
 
             {/* Toggle Button */}
-            {!isOpen && (
+            {!isOpen && isLoggedIn &&(
                 <button
                     className="text-xl text-black fixed top-4 left-4"
                     style={{ zIndex: 1000 }}
@@ -101,8 +102,8 @@ function Sidebar(props: SidebarProps) {
 
             <main 
                 className={`transition-all duration-300 fixed h-screen`} 
-                style={{marginLeft: '20%',
-                    width: mainSize,
+                style={{marginLeft: isLoggedIn ? '20%' : '0%',
+                    width: isLoggedIn ? mainSize : window.innerWidth,
                 }}>
                 {props.children}
             </main>

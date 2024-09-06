@@ -38,7 +38,6 @@ function MainPage() {
   useEffect(() => {
     const fetchDataForMainPage = setTimeout(async () => {
       const data = await fetchData();
-      console.log("was here", data);
 
       if(data === null){
         return;

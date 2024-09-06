@@ -16,5 +16,16 @@
         "addReceipt": "Dodaj nowy paragon",
         "myReceipts": "Moje paragony",
         "logout": "Wyloguj się"
+    },
+    "loginmenu": {
+        "login": "Zaloguj się",
+        "register": "Zarejestruj się",
+        "loginDescription": "Wpisz poniżej swoje dane logowania po czym naciśnij przycisk zaloguj",
+        "username": "Nazwa użytkownika",
+        "password": "Hasło",
+        "registeDescription": "Uzupełnij poniższe dane aby utworzyć konto, a następnie naciśnij przycisk",
+        "email": "Adres email",
+        "repeatPassword": "Powtórz hasło"
+
     }
 }
