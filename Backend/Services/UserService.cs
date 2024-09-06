@@ -7,8 +7,7 @@ namespace Backend.Services
     {
         public async Task<User> GetUserData(string username, string password)
         {
-            var user = await databaseConnection.GetUserData(username, password);
-            return user;
+            return await databaseConnection.GetUserData(username, password);
         }
 
         public async void RegisterUser(string username, string password)

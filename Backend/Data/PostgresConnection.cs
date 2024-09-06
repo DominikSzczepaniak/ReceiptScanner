@@ -47,17 +47,13 @@ namespace Backend.Data
 
             await using var reader = await cmd.ExecuteReaderAsync();
 
-            User user;
+            User user = new User(-5, "", "");
             if (await reader.ReadAsync())
             {
                 var id = reader.GetInt32(reader.GetOrdinal("ID"));
                 var dbUsername = reader.GetString(reader.GetOrdinal("Username"));
                 var dbPassword = reader.GetString(reader.GetOrdinal("Password"));
                 user = new User(id, dbUsername, dbPassword);
-            }
-            else
-            {
-                throw new ArgumentException("Credentials incorrect");
             }
 
             return user;
