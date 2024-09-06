@@ -33,7 +33,12 @@
         "successfullyRegistered": "Pomyślnie zarejestrowano!",
         "unknownError": "Wystąpił nieznany błąd, spróbuj później",
         "badCredentials": "Podane dane logowania nie są poprawne"
-
-
+    },
+    "products": {
+        "productName": "Nazwa produktu",
+        "price": "Cena",
+        "amount": "Ilość",
+        "category": "Kategoria",
+        "noCategory": "Nieokreślona"
     }
 }
