@@ -40,5 +40,17 @@
         "amount": "Ilość",
         "category": "Kategoria",
         "noCategory": "Nieokreślona"
+    },
+    "addReceiptPage": {
+        "addReceipt": "Dodaj paragon",
+        "addReceiptDescription": "Miejsce w którym możesz wysłać zdjęcie z paragonem",
+        "chooseLanguage": "Wybierz język z listy poniżej",
+        "clickToSendPhoto": "Kliknij, aby dodać zdjęcie",
+        "fileNotSelected": "Nie wysłano żadnego zdjęcia!",
+        "successfullySentPhoto": "Pomyślnie przesłano zdjęcie",
+        "successfullyAddedReceipt": "Pomyślnie dodano paragon!",
+        "success": "Sukces!",
+        "failure": "Błąd",
+        "couldntAddReceipt": "Nie udało się dodać paragonu, spróbuj ponownie"
     }
 }
