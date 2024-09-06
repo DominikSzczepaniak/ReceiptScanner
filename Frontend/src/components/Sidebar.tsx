@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import translations from "../translations/pl.json";
+import {Toaster} from "@/components/ui/toaster.tsx";
 
 interface SidebarProps {
     children?: React.ReactNode;
@@ -107,6 +108,7 @@ function Sidebar(props: SidebarProps) {
                 }}>
                 {props.children}
             </main>
+            <Toaster />
         </>
     );
 }

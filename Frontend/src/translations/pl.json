@@ -25,7 +25,15 @@
         "password": "Hasło",
         "registeDescription": "Uzupełnij poniższe dane aby utworzyć konto, a następnie naciśnij przycisk",
         "email": "Adres email",
-        "repeatPassword": "Powtórz hasło"
+        "repeatPassword": "Powtórz hasło",
+        "passwordsDontMatch": "Hasła różnią się od siebie",
+        "error": "Błąd",
+        "userAlreadyExists": "Istnieje już użytkownik z takim loginem, wybierz inny",
+        "success": "Sukces!",
+        "successfullyRegistered": "Pomyślnie zarejestrowano!",
+        "unknownError": "Wystąpił nieznany błąd, spróbuj później",
+        "badCredentials": "Podane dane logowania nie są poprawne"
+
 
     }
 }

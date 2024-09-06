@@ -18,12 +18,13 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
+import {useToast} from "@/hooks/use-toast.ts";
 
 function UserPage() {
     if(sessionStorage.getItem("userid") != null){
-        //add alert (left bottom screen popup that vanishes after 2 seconds)
         window.location.href = "/";
     }
+    const {toast} = useToast();
 
     const handleLogin = async () => {
         const username = document.getElementById('username') as HTMLInputElement;
@@ -37,8 +38,11 @@ function UserPage() {
 
             const data = await response.data;
             if(data.id === -5){
-                //show toast incorrect credentials
-                return;
+                return (toast({
+                    title: translations.loginmenu.error,
+                    description: translations.loginmenu.badCredentials,
+                    className: "border-2 border-red-400"
+                }))
             }
             sessionStorage.setItem('userid', data.id);
             window.location.href = '/';
@@ -55,8 +59,12 @@ function UserPage() {
         const password = document.getElementById('password') as HTMLInputElement;
         const passwordRepeat = document.getElementById('passwordRepeat') as HTMLInputElement;
 
-        if(password !== passwordRepeat){
-            //toast error - wrong passwords
+        if(password.value !== passwordRepeat.value){
+            return (toast({
+                title: translations.loginmenu.error,
+                description: translations.loginmenu.passwordsDontMatch,
+                className: "border-2 border-red-400"
+            }))
         }
 
         try {
@@ -67,17 +75,26 @@ function UserPage() {
 
             const data = await response.data;
             if (data.id !== -5) {
-                //show toast users exists
-                return;
+                return (toast({
+                    title: translations.loginmenu.error,
+                    description: translations.loginmenu.userAlreadyExists,
+                    className: "border-2 border-red-400"
+                }))
             }
 
             const postData = await fetch(`${serverLink}/User/${username.value}/${password.value}`, {method: 'POST', mode: 'cors'});
             if(postData.ok){
-                //toast correct
-                return;
+                return (toast({
+                    title: translations.loginmenu.success,
+                    description: translations.loginmenu.successfullyRegistered
+                }))
             }
             else{
-                //toast error
+                return (toast({
+                    title: translations.loginmenu.error,
+                    description: translations.loginmenu.unknownError,
+                    className: "border-2 border-red-400"
+                }))
             }
         } catch(error) {
             console.error('There was a problem with the fetch operation:', error);
@@ -108,7 +125,7 @@ function UserPage() {
                             </div>
                             <div className="space-y-1">
                                 <Label htmlFor="password">{translations.loginmenu.password}</Label>
-                                <Input id="password" defaultValue="" />
+                                <Input id="password" defaultValue="" type="password" />
                             </div>
                         </CardContent>
                         <CardFooter>
