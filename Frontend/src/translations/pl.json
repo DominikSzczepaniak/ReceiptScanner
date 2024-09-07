@@ -2,6 +2,10 @@
     "lastFourReceipts": "Ostatnie 4 paragony:",
     "youSpentThisMonth": "Wydałeś w tym miesiącu:",
     "listOfReceipts": "Lista Twoich ostatnich paragonów",
+    "common": {
+        "error": "Błąd",
+        "success": "Sukces!"
+    },
     "receipts": {
         "receipt": "Paragon",
         "priceAmount": "Kwota",
@@ -11,8 +15,6 @@
     },
     "sidebar": {
         "home": "Strona główna",
-        "login": "Zaloguj się",
-        "register": "Zarejestruj się",
         "addReceipt": "Dodaj nowy paragon",
         "myReceipts": "Moje paragony",
         "logout": "Wyloguj się"
@@ -20,16 +22,14 @@
     "loginmenu": {
         "login": "Zaloguj się",
         "register": "Zarejestruj się",
-        "loginDescription": "Wpisz poniżej swoje dane logowania po czym naciśnij przycisk zaloguj",
         "username": "Nazwa użytkownika",
         "password": "Hasło",
-        "registeDescription": "Uzupełnij poniższe dane aby utworzyć konto, a następnie naciśnij przycisk",
         "email": "Adres email",
         "repeatPassword": "Powtórz hasło",
+        "loginDescription": "Wpisz poniżej swoje dane logowania po czym naciśnij przycisk zaloguj",
+        "registerDescription": "Uzupełnij poniższe dane aby utworzyć konto, a następnie naciśnij przycisk",
         "passwordsDontMatch": "Hasła różnią się od siebie",
-        "error": "Błąd",
         "userAlreadyExists": "Istnieje już użytkownik z takim loginem, wybierz inny",
-        "success": "Sukces!",
         "successfullyRegistered": "Pomyślnie zarejestrowano!",
         "unknownError": "Wystąpił nieznany błąd, spróbuj później",
         "badCredentials": "Podane dane logowania nie są poprawne"
@@ -49,8 +49,6 @@
         "fileNotSelected": "Nie wysłano żadnego zdjęcia!",
         "successfullySentPhoto": "Pomyślnie przesłano zdjęcie",
         "successfullyAddedReceipt": "Pomyślnie dodano paragon!",
-        "success": "Sukces!",
-        "failure": "Błąd",
         "couldntAddReceipt": "Nie udało się dodać paragonu, spróbuj ponownie"
     }
 }

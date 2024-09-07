@@ -72,20 +72,20 @@ export default function AddReceipt() {
         e.preventDefault();
         if (!state.file) {
             return (toast({
-                title: translations.addReceiptPage.failure,
+                title: translations.common.error,
                 description: translations.addReceiptPage.fileNotSelected,
                 className: "border-2 border-red-400"
             }))
         }
         handleSubmit().then(() => {
             return (toast({
-                title: translations.addReceiptPage.success,
+                title: translations.common.success,
                 description: translations.addReceiptPage.successfullyAddedReceipt
             }))
         }).catch((error) => {
             console.error(error);
             return (toast({
-                title: translations.addReceiptPage.failure,
+                title: translations.common.error,
                 description: translations.addReceiptPage.couldntAddReceipt,
                 className: "border-2 border-red-400"
             }))

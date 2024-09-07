@@ -39,7 +39,7 @@ function UserPage() {
             const data = await response.data;
             if(data.id === -5){
                 return (toast({
-                    title: translations.loginmenu.error,
+                    title: translations.common.error,
                     description: translations.loginmenu.badCredentials,
                     className: "border-2 border-red-400"
                 }))
@@ -61,7 +61,7 @@ function UserPage() {
 
         if(password.value !== passwordRepeat.value){
             return (toast({
-                title: translations.loginmenu.error,
+                title: translations.common.error,
                 description: translations.loginmenu.passwordsDontMatch,
                 className: "border-2 border-red-400"
             }))
@@ -76,7 +76,7 @@ function UserPage() {
             const data = await response.data;
             if (data.id !== -5) {
                 return (toast({
-                    title: translations.loginmenu.error,
+                    title: translations.common.error,
                     description: translations.loginmenu.userAlreadyExists,
                     className: "border-2 border-red-400"
                 }))
@@ -85,13 +85,13 @@ function UserPage() {
             const postData = await fetch(`${serverLink}/User/${username.value}/${password.value}`, {method: 'POST', mode: 'cors'});
             if(postData.ok){
                 return (toast({
-                    title: translations.loginmenu.success,
+                    title: translations.common.success,
                     description: translations.loginmenu.successfullyRegistered
                 }))
             }
             else{
                 return (toast({
-                    title: translations.loginmenu.error,
+                    title: translations.common.error,
                     description: translations.loginmenu.unknownError,
                     className: "border-2 border-red-400"
                 }))
@@ -138,7 +138,7 @@ function UserPage() {
                         <CardHeader>
                             <CardTitle>{translations.loginmenu.register}</CardTitle>
                             <CardDescription>
-                                {translations.loginmenu.registeDescription}
+                                {translations.loginmenu.registerDescription}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-2">

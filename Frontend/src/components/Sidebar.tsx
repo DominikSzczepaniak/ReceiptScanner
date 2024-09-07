@@ -12,7 +12,6 @@ function Sidebar(props: SidebarProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [width, setWidth] = useState(window.innerWidth);
     const isLoggedIn = sessionStorage.getItem("userid") !== null;
-    const visibleForLoggedCSS = (isLogged: boolean) => (isLogged ? '' : 'hidden');
 
     const toggleIsOpen = () => {
         setIsOpen(!isOpen);
@@ -80,12 +79,10 @@ function Sidebar(props: SidebarProps) {
                         >
                             &times;
                         </button>
-                        <Link to="/" className={`block mb-4 ${visibleForLoggedCSS(isLoggedIn)}`} onClick={toggleIsOpen}>{translations.sidebar.home}</Link>
-                        <Link to="/login" className={`block mb-4 ${visibleForLoggedCSS(!isLoggedIn)}`} onClick={toggleIsOpen}>{translations.sidebar.login}</Link>
-                        <Link to="/register" className={`block mb-4 ${visibleForLoggedCSS(!isLoggedIn)}`} onClick={toggleIsOpen}>{translations.sidebar.register}</Link>
-                        <Link to="/add" className={`block mb-4 ${visibleForLoggedCSS(isLoggedIn)}`} onClick={toggleIsOpen}>{translations.sidebar.addReceipt}</Link>
-                        <Link to="/receipts" className={`block mb-4 ${visibleForLoggedCSS(isLoggedIn)}`} onClick={toggleIsOpen}>{translations.sidebar.myReceipts}</Link>
-                        <p onClick={handleLogout} className={`absolute bottom-1.5 ${visibleForLoggedCSS(isLoggedIn)} cursor-pointer`}>{translations.sidebar.logout}</p>
+                        <Link to="/" className={`block mb-4`} onClick={toggleIsOpen}>{translations.sidebar.home}</Link>
+                        <Link to="/add" className={`block mb-4 `} onClick={toggleIsOpen}>{translations.sidebar.addReceipt}</Link>
+                        <Link to="/receipts" className={`block mb-4 }`} onClick={toggleIsOpen}>{translations.sidebar.myReceipts}</Link>
+                        <p onClick={handleLogout} className={`absolute bottom-1.5 cursor-pointer`}>{translations.sidebar.logout}</p>
                     </div>
                 )}
             </div>)}
