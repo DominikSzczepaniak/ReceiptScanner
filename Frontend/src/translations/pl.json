@@ -4,7 +4,8 @@
     "listOfReceipts": "Lista Twoich ostatnich paragonów",
     "common": {
         "error": "Błąd",
-        "success": "Sukces!"
+        "success": "Sukces!",
+        "save": "Zapisz"
     },
     "receipts": {
         "receipt": "Paragon",
@@ -50,5 +51,13 @@
         "successfullySentPhoto": "Pomyślnie przesłano zdjęcie",
         "successfullyAddedReceipt": "Pomyślnie dodano paragon!",
         "couldntAddReceipt": "Nie udało się dodać paragonu, spróbuj ponownie"
+    },
+    "filters":{
+        "rangeFilterTitle": "Filtrowanie przedziałami",
+        "minimum": "Minimum",
+        "maximum": "Maksimum",
+        "prices": "Ceny",
+        "quantities": "Ilość",
+        "categories": "Kategorie"
     }
 }
