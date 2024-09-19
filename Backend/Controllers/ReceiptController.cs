@@ -19,7 +19,7 @@ public class ReceiptController(ReceiptService receiptService, ProductService pro
         }
         catch (ArgumentException ex)
         {
-            throw new HttpRequestException(HttpRequestError.Unknown, ex.Message);
+            return NotFound(ex.Message);
         }
         catch (InvalidOperationException ex)
         {
@@ -93,6 +93,10 @@ public class ReceiptController(ReceiptService receiptService, ProductService pro
         {
             await receiptService.DeleteReceipt(receiptId);
             return Ok();
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (InvalidOperationException ex)
         {

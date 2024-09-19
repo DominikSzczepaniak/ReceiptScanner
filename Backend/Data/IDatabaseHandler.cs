@@ -17,6 +17,7 @@ namespace Backend.Data
         public Task<List<int>> GetProductsIdForReceipt(int receiptId);
         public Task<List<Receipt>> GetReceiptsBetweenDates(DateTime startDate, DateTime endDate, int ownerId);
         public Task DeleteProduct(int id);
-        
+        public Task DeleteProductReceiptConnection(int productId, int receiptId);
+
     }
 }

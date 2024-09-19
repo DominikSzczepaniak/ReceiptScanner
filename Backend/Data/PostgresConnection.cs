@@ -17,6 +17,10 @@ namespace Backend.Data
 
         public async Task<User> GetUserData(string username, string password)
         {
+            if (!await CheckUserExistanceForCredentials(username, password))
+            {
+                throw new ArgumentException("No user for these credentials");
+            }
             await using var connection = await GetConnectionAsync();
             await using var cmd = new NpgsqlCommand("SELECT * FROM Users WHERE Username=@username AND Password=@password", connection);
             cmd.Parameters.AddWithValue("username", username);
@@ -24,19 +28,30 @@ namespace Backend.Data
 
             await using var reader = await cmd.ExecuteReaderAsync();
 
-            User user = new User(-5, "", "");
             if (await reader.ReadAsync())
             {
                 var id = reader.GetInt32(reader.GetOrdinal("ID"));
                 var dbUsername = reader.GetString(reader.GetOrdinal("Username"));
                 var dbPassword = reader.GetString(reader.GetOrdinal("Password"));
-                user = new User(id, dbUsername, dbPassword);
+                return new User(id, dbUsername, dbPassword);
             }
 
-            return user;
+            throw new ArgumentException("No user with these credentials");
         }
 
-        public async Task<int> GetMaximumUserId()
+        public async Task<bool> CheckUserExistanceForCredentials(string username, string password)
+        {
+            await using var connection = await GetConnectionAsync();
+            await using var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM User WHERE Username=@username AND Password=@password", connection);
+            cmd.Parameters.AddWithValue("username", username);
+            cmd.Parameters.AddWithValue("password", password);
+            
+            var result = await cmd.ExecuteScalarAsync();
+            var count = Convert.ToInt32(result);
+            return count > 0;
+        }
+
+        public async Task<int> GetMaximumUserId() //TODO create sequence and get id from it
         {
             await using var connection = await GetConnectionAsync();
             await using var cmd = new NpgsqlCommand("SELECT MAX(ID) FROM Users", connection);
@@ -53,21 +68,13 @@ namespace Backend.Data
 
         public async Task RegisterUser(string username, string password)
         {
-            await using var connection = await GetConnectionAsync();
-            var userid = await GetMaximumUserId() + 1;
-            await using var checkExistance =
-                new NpgsqlCommand("SELECT COUNT(*) FROM Users WHERE Username=@username AND Password=@password", connection);
-            checkExistance.Parameters.AddWithValue("username", username);
-            checkExistance.Parameters.AddWithValue("password", password);
-
-            var result = await checkExistance.ExecuteScalarAsync();
-            var count = Convert.ToInt32(result);
-            if (count > 0)
+            if (await CheckUserExistanceForCredentials(username, password))
             {
                 throw new ArgumentException("User already exists");
             }
+            await using var connection = await GetConnectionAsync();
+            var userid = await GetMaximumUserId() + 1;
             
-
             await using var cmd = new NpgsqlCommand("INSERT INTO Users (ID, Username, Password) VALUES (@id, @username, @password)", connection);
             cmd.Parameters.AddWithValue("id", userid);
             cmd.Parameters.AddWithValue("username", username);
@@ -78,6 +85,10 @@ namespace Backend.Data
 
         public async Task DeleteUser(string username, string password)
         {
+            if (!await CheckUserExistanceForCredentials(username, password))
+            {
+                throw new ArgumentException("No user with these credentials");
+            }
             await using var connection = await GetConnectionAsync();
             await using var cmd =
                 new NpgsqlCommand("DELETE FROM Users WHERE Username=@username AND Password=@password", connection);
@@ -87,28 +98,37 @@ namespace Backend.Data
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task<Receipt>GetReceiptData(int id)
+        public async Task<bool> CheckReceiptExistance(int receiptId)
         {
             await using var connection = await GetConnectionAsync();
+            await using var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM Receipt WHERE ID=@id", connection);
+            cmd.Parameters.AddWithValue("id", receiptId);
+            
+            var result = await cmd.ExecuteScalarAsync();
+            var count = Convert.ToInt32(result);
+            return count > 0;
+        }
+
+        public async Task<Receipt> GetReceiptData(int receiptId)
+        {
+            if (!await CheckReceiptExistance(receiptId))
+            {
+                throw new ArgumentException("No receipt with this id");
+            }
+            await using var connection = await GetConnectionAsync();
             await using var cmd = new NpgsqlCommand("SELECT * FROM Receipt WHERE ID=@id", connection);
-            cmd.Parameters.AddWithValue("id", id);
+            cmd.Parameters.AddWithValue("id", receiptId);
 
             await using var reader = await cmd.ExecuteReaderAsync();
 
-            Receipt receipt;
             if (await reader.ReadAsync())
             {
                 var dateTime = reader.GetDateTime(reader.GetOrdinal("Date"));
                 var shopName = reader.GetString(reader.GetOrdinal("Shopname"));
                 var ownerId = reader.GetInt32(reader.GetOrdinal("OwnerID"));
-                receipt = new Receipt(id, dateTime, shopName, ownerId);
+                return new Receipt(receiptId, dateTime, shopName, ownerId);
             }
-            else
-            {
-                throw new ArgumentException("No receipt with such id");
-            }
-
-            return receipt;
+            throw new ArgumentException("No receipt with this id");
         }
 
         public async Task<List<Receipt>> GetReceiptsForUser(int userId)
@@ -131,11 +151,15 @@ namespace Backend.Data
             return result;
         }
 
-        public async Task DeleteReceipt(int id)
+        public async Task DeleteReceipt(int receiptId)
         {
+            if (!await CheckReceiptExistance(receiptId))
+            {
+                throw new ArgumentException("No receipt with this id");
+            }
             await using var connection = await GetConnectionAsync();
             await using var cmd = new NpgsqlCommand("DELETE FROM Receipt WHERE ID=@id", connection);
-            cmd.Parameters.AddWithValue("id", id);
+            cmd.Parameters.AddWithValue("id", receiptId);
 
             await cmd.ExecuteNonQueryAsync();
         }
@@ -166,15 +190,29 @@ namespace Backend.Data
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task<Product> GetProduct(int id)
+        public async Task<bool> CheckProductExistance(int productId)
         {
             await using var connection = await GetConnectionAsync();
+            await using var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM Product WHERE ID=@id", connection);
+            cmd.Parameters.AddWithValue("id", productId);
+            
+            var result = await cmd.ExecuteScalarAsync();
+            var count = Convert.ToInt32(result);
+            return count > 0;
+        }
+
+        public async Task<Product> GetProduct(int productId)
+        {
+            if(!await CheckProductExistance(productId))
+            {
+                throw new ArgumentException("No product with this id");
+            }
+            await using var connection = await GetConnectionAsync();
             await using var cmd = new NpgsqlCommand("SELECT * FROM Product WHERE ID=@id", connection);
-            cmd.Parameters.AddWithValue("id", id);
+            cmd.Parameters.AddWithValue("id", productId);
 
             await using var reader = await cmd.ExecuteReaderAsync();
 
-            Product product;
             if (await reader.ReadAsync())
             {
                 var name = reader.GetString(reader.GetOrdinal("Name"));
@@ -187,27 +225,30 @@ namespace Backend.Data
                 {
                     category = reader.GetString(reader.GetOrdinal("Category"));
                 }
-                product = new Product(id, name, quantityWeight, price, ownerId, category);
+                return new Product(productId, name, quantityWeight, price, ownerId, category);
             }
-            else
+            throw new ArgumentException("No product with this id");
+        }
+
+        public async Task DeleteProduct(int productId)
+        {
+            if (!await CheckProductExistance(productId))
             {
                 throw new ArgumentException("No product with such id");
             }
-
-            return product;
-        }
-
-        public async Task DeleteProduct(int id)
-        {
             await using var connection = await GetConnectionAsync();
             await using var cmd = new NpgsqlCommand("DELETE FROM Product WHERE ID=@id", connection);
-            cmd.Parameters.AddWithValue("id", id);
+            cmd.Parameters.AddWithValue("id", productId);
 
             await cmd.ExecuteNonQueryAsync();
         }
 
         public async Task<List<int>> GetProductsIdForReceipt(int receiptId)
         {
+            if (!await CheckReceiptExistance(receiptId))
+            {
+                throw new ArgumentException("No receipt with this id");
+            }
             await using var connection = await GetConnectionAsync();
             await using var cmd = new NpgsqlCommand("SELECT * FROM ReceiptToProducts WHERE ReceiptID=@receiptId", connection);
             cmd.Parameters.AddWithValue("receiptId", receiptId);
@@ -239,6 +280,16 @@ namespace Backend.Data
             }
 
             return result;
+        }
+    
+        public async Task DeleteProductReceiptConnection(int productId, int receiptId)
+        {
+            await using var connection = await GetConnectionAsync();
+            await using var cmd = new NpgsqlCommand("DELETE FROM ReceiptToProducts WHERE ReceiptId=@receiptId AND ProductId=@productId", connection);
+            cmd.Parameters.AddWithValue("receiptId", receiptId);
+            cmd.Parameters.AddWithValue("productId", productId);
+
+            await cmd.ExecuteNonQueryAsync();
         }
     }
 }

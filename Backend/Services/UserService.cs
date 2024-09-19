@@ -10,12 +10,12 @@ namespace Backend.Services
             return await databaseConnection.GetUserData(username, password);
         }
 
-        public async void RegisterUser(string username, string password)
+        public async Task RegisterUser(string username, string password)
         {
             await databaseConnection.RegisterUser(username, password);
         }
 
-        public async void DeleteUser(string username, string password)
+        public async Task DeleteUser(string username, string password)
         {
             await databaseConnection.DeleteUser(username, password);
         }

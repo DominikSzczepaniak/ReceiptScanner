@@ -33,7 +33,7 @@ public class ProductController(ProductService productService) : Controller
         } 
         catch (ArgumentException ex)
         {
-            throw new HttpRequestException(HttpRequestError.Unknown, ex.Message);
+            return NotFound(ex.Message);
         }
         catch (InvalidOperationException ex)
         {
@@ -51,7 +51,7 @@ public class ProductController(ProductService productService) : Controller
         } 
         catch (ArgumentException ex)
         {
-            throw new HttpRequestException(HttpRequestError.Unknown, ex.Message);
+            return NotFound(ex.Message);
         }
         catch (InvalidOperationException ex)
         {

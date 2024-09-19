@@ -47,11 +47,12 @@ public class ReceiptService(IDatabaseHandler databaseConnection, ProductService 
         return (receipts, totalSpending);
     }
 
-    public async Task DeleteReceipt(int id) //TODO delete also from ReceiptToProducts database
+    public async Task DeleteReceipt(int id)
     {
         var products = await productService.GetReceiptProducts(id);
         foreach (var product in products)
         {
+            await databaseConnection.DeleteProductReceiptConnection(id, product.Id);
             await databaseConnection.DeleteProduct(product.Id);
         }
         await databaseConnection.DeleteReceipt(id);
