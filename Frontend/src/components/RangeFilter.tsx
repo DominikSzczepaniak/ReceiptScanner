@@ -38,7 +38,6 @@ const RangeFilter = <T, >({
     };
 
     const processFilter = (newMinValue: number, newMaxValue: number) => {
-        console.log(`min: ${newMinValue}, max: ${newMaxValue}`);
         deleteFilter(filterId);
         if (newMinValue > newMaxValue) {
             return;
@@ -49,7 +48,7 @@ const RangeFilter = <T, >({
         });
         applyFilters();
     };
-
+    //TODO add popover from shadcn
     return (
         <Card className="w-full max-w-sm">
             <CardHeader>

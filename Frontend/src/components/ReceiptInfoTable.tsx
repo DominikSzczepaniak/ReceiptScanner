@@ -6,6 +6,7 @@ import translations from "../translations/pl.json";
 import RangeFilter from "@/components/RangeFilter.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs.tsx";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
 
 type ReceiptInfoTableProps = {
     id: number;
@@ -41,11 +42,6 @@ function ReceiptInfoTable(props: ReceiptInfoTableProps) {
             });
     }
 
-    const showTabsMenuForFilters = () => {
-        const tabsSelector = document.getElementById("tabs")!;
-        tabsSelector.className === "hidden" ? tabsSelector.className = "" : tabsSelector.className = "hidden";
-    }
-
     const applyFilters = () => {
         let filteredProducts = [...allProducts];
         filters.forEach(filter => {
@@ -75,22 +71,28 @@ function ReceiptInfoTable(props: ReceiptInfoTableProps) {
                         <TableHead>{translations.products.category}</TableHead>
                         <TableHead className="text-right">{translations.products.price}</TableHead>
                         <div>
-                            <Button onClick={showTabsMenuForFilters}></Button>
-                            <Tabs className="hidden" id="tabs">
-                                <TabsList>
-                                    <TabsTrigger value="priceRange">{translations.filters.prices}</TabsTrigger>
-                                    <TabsTrigger value="quantityRange">{translations.filters.quantities}</TabsTrigger>
-                                    <TabsTrigger value="categoryPicker">{translations.filters.categories}</TabsTrigger>
-                                </TabsList>
-                                <TabsContent value="priceRange">
-                                    <RangeFilter<Product> min={0} max={1000}
-                                                          step={10}
-                                                          addFilter={addFilter}
-                                                          deleteFilter={deleteFilter}
-                                                          filterField="price"
-                                                            applyFilters={applyFilters}/>
-                                </TabsContent>
-                            </Tabs>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button className="float-right">Filter</Button>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                    <Tabs>
+                                        <TabsList>
+                                            <TabsTrigger value="priceRange">{translations.filters.prices}</TabsTrigger>
+                                            <TabsTrigger value="quantityRange">{translations.filters.quantities}</TabsTrigger>
+                                            <TabsTrigger value="categoryPicker">{translations.filters.categories}</TabsTrigger>
+                                        </TabsList>
+                                        <TabsContent value="priceRange">
+                                            <RangeFilter<Product> min={0} max={1000}
+                                                                  step={10}
+                                                                  addFilter={addFilter}
+                                                                  deleteFilter={deleteFilter}
+                                                                  filterField="price"
+                                                                    applyFilters={applyFilters}/>
+                                        </TabsContent>
+                                    </Tabs>
+                                </PopoverContent>
+                            </Popover>
                         </div>
                     </TableRow>
                 </TableHeader>
@@ -101,6 +103,7 @@ function ReceiptInfoTable(props: ReceiptInfoTableProps) {
                             <TableCell>{product.quantityWeight}</TableCell>
                             <TableCell>{product.category ? product.category : translations.products.noCategory}</TableCell>
                             <TableCell className="text-right">{product.price}</TableCell>
+                            <TableCell></TableCell>
                         </TableRow>
                     ))}
 

@@ -42,10 +42,7 @@ function ReceiptTable() {
 
     useEffect(() => {
         if (receipts.length > 0) {
-            const fetchData = setTimeout(() => {
-                fetchReceiptTotals(receipts);
-            }, 100);
-            return () => clearTimeout(fetchData);
+            fetchReceiptTotals(receipts);
         }
     }, [receipts]);
 
@@ -64,10 +61,10 @@ function ReceiptTable() {
                 <TableBody>
                     {receipts.map((receipt) => (
                         <TableRow key={receipt.id}>
-                            <TableCell className="font-medium">{parseDate(receipt.date)}</TableCell>
+                            <TableCell>{parseDate(receipt.date)}</TableCell>
                             <TableCell>{receipt.shopName[1].toUpperCase() + receipt.shopName.toString().slice(2, receipt.shopName.length-1)}</TableCell>
                             <TableCell>{receiptTotals[receipt.id] || 'Loading...'}</TableCell>
-                            <TableCell className="text-right">
+                            <TableCell className="text-right font-bold">
                                 <a href={`/Receipt/${receipt.id}`}>{translations.receipts.receiptInfo}</a>
                             </TableCell>
                         </TableRow>

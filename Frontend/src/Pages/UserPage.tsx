@@ -1,4 +1,3 @@
-import axios from "axios";
 import {serverLink} from "../settings"
 import translations from "../translations/pl.json";
 import { Button } from "@/components/ui/button"
@@ -31,12 +30,14 @@ function UserPage() {
         const password = document.getElementById('password') as HTMLInputElement;
 
         try {
-            const response = await axios.get(`${serverLink}/User/${username.value}/${password.value}`);
-            if(response.status !== 200){
+            const response = await fetch(`${serverLink}/User/${username.value}/${password.value}`, { method: 'GET', mode: 'cors' });
+
+            if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
 
-            const data = await response.data;
+            const data = await response.json();
+
             if(data.id === -5){
                 return (toast({
                     title: translations.common.error,
@@ -68,12 +69,14 @@ function UserPage() {
         }
 
         try {
-            const response = await axios.get(`${serverLink}/User/${username.value}/${password.value}`);
-            if (response.status !== 200) {
+            const response = await fetch(`${serverLink}/User/${username.value}/${password.value}`, { method: 'GET', mode: 'cors' });
+
+            if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
 
-            const data = await response.data;
+            const data = await response.json();
+
             if (data.id !== -5) {
                 return (toast({
                     title: translations.common.error,
