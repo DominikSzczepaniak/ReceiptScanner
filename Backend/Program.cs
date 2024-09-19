@@ -20,9 +20,8 @@ class Program
             return;
         }
 
-        PostgresConnection.ConnectionString = connectionString;
+        builder.Services.AddSingleton(new PostgresConnectionPool(connectionString, maxPoolSize: 10));
         builder.Services.AddSingleton<IDatabaseHandler, PostgresConnection>();
-        builder.Services.AddHostedService<DatabaseInitializer>();
         builder.Services.AddSingleton<UserService>();
         builder.Services.AddSingleton<ProductService>();
         builder.Services.AddSingleton<ReceiptService>();

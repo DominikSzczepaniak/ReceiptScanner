@@ -17,7 +17,14 @@ public class ProductService(IDatabaseHandler databaseConnection)
 
     public async Task<List<Product>> GetReceiptProducts(int receiptId)
     {
-        return await databaseConnection.GetReceiptProducts(receiptId);
+        var productIds = await databaseConnection.GetProductsIdForReceipt(receiptId);
+        var result = new List<Product>();
+        foreach (var productId in productIds)
+        {
+            result.Add(await GetProduct(productId));
+        }
+
+        return result;
     }
 
     public async Task DeleteProduct(int productId) //TODO delete also from ReceiptToProducts database

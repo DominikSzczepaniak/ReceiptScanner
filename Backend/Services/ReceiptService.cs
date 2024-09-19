@@ -49,7 +49,11 @@ public class ReceiptService(IDatabaseHandler databaseConnection, ProductService 
 
     public async Task DeleteReceipt(int id) //TODO delete also from ReceiptToProducts database
     {
-        await databaseConnection.DeleteReceiptProducts(id);
+        var products = await productService.GetReceiptProducts(id);
+        foreach (var product in products)
+        {
+            await databaseConnection.DeleteProduct(product.Id);
+        }
         await databaseConnection.DeleteReceipt(id);
     }
 
