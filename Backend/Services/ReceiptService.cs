@@ -58,8 +58,13 @@ public class ReceiptService(IDatabaseHandler databaseConnection, ProductService 
         await databaseConnection.DeleteReceipt(id);
     }
 
-    public async Task AddReceipt(DateTime dateTime, string shopName, int ownerId)
+    public async Task<int> AddReceipt(DateTime dateTime, string shopName, int ownerId)
     {
-        await databaseConnection.AddReceipt(dateTime, shopName, ownerId);
+        return await databaseConnection.AddReceipt(dateTime, shopName, ownerId);
+    }
+
+    public async Task AddProductReceiptConnection(int productId, int receiptId)
+    {
+        await databaseConnection.AddProductReceiptConnection(productId, receiptId);
     }
 }

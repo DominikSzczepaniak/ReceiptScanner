@@ -62,8 +62,8 @@ function ReceiptTable() {
                     {receipts.map((receipt) => (
                         <TableRow key={receipt.id}>
                             <TableCell>{parseDate(receipt.date)}</TableCell>
-                            <TableCell>{receipt.shopName[1].toUpperCase() + receipt.shopName.toString().slice(2, receipt.shopName.length-1)}</TableCell>
-                            <TableCell>{receiptTotals[receipt.id] || 'Loading...'}</TableCell>
+                            <TableCell>{receipt.shopName[0].toUpperCase() + receipt.shopName.toString().slice(1, receipt.shopName.length)}</TableCell>
+                            <TableCell>{receiptTotals[receipt.id]?.toFixed(2) || 'Loading...'}</TableCell>
                             <TableCell className="text-right font-bold">
                                 <a href={`/Receipt/${receipt.id}`}>{translations.receipts.receiptInfo}</a>
                             </TableCell>

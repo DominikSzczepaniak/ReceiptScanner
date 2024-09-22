@@ -5,9 +5,9 @@ namespace Backend.Services;
 
 public class ProductService(IDatabaseHandler databaseConnection)
 {
-    public async Task AddProduct(string name, decimal price, decimal quantityWeight, string category, int ownerId)
+    public async Task<int> AddProduct(string name, decimal price, decimal quantityWeight, string category, int ownerId)
     {
-        await databaseConnection.AddProduct(name, price, quantityWeight, category, ownerId);
+        return await databaseConnection.AddProduct(name, price, quantityWeight, category, ownerId);
     }
 
     public async Task<Product> GetProduct(int productId)

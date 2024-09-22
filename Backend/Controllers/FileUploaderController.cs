@@ -20,7 +20,9 @@ public class FileUploaderController : ControllerBase
         }
         image.Picture = imageData;
         Console.WriteLine("Correctly updated");
-        //place image in folder and run docker with python script.
+        //TODO Create sequence in database for image id 
+        // Add image to folder images with given id 
+        // Run docker script on this image 
         return Task.FromResult<IActionResult>(Ok());
     }
 } 

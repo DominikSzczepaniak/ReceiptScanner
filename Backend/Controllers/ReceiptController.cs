@@ -124,10 +124,11 @@ public class ReceiptController(ReceiptService receiptService, ProductService pro
         }
         try
         {
-            await receiptService.AddReceipt(order.Date, order.ShopName, ownerId);
+            var receiptId = await receiptService.AddReceipt(order.Date, order.ShopName, ownerId);
             foreach (var item in order.Items)
             {
-                await productService.AddProduct(item.Name, item.Price, item.QuantityWeight, item.Category, ownerId);
+                var productId = await productService.AddProduct(item.Name, item.Price, item.QuantityWeight, item.Category, ownerId);
+                await receiptService.AddProductReceiptConnection(productId, receiptId);
             }
             return Ok();
         }
