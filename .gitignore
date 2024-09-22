@@ -251,3 +251,5 @@ src/.vs/config/applicationhost.config
 
 ReceiptReader/data/*
 ReceiptReader/yolov5/*
+ReceiptReader/yolov5 
+ReceiptReader/yolov5_model_datatransfer.ipynb
