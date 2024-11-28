@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.DependencyInjection;
 using Backend.Data;
+using Backend.Interfaces;
 using Backend.Services;
 
 class Program
@@ -22,9 +23,10 @@ class Program
 
         builder.Services.AddSingleton(new PostgresConnectionPool(connectionString, maxPoolSize: 10));
         builder.Services.AddSingleton<IDatabaseHandler, PostgresConnection>();
-        builder.Services.AddSingleton<UserService>();
-        builder.Services.AddSingleton<ProductService>();
-        builder.Services.AddSingleton<ReceiptService>();
+        builder.Services.AddSingleton<IReceiptProductConnectionService, ReceiptProductConnectionService>();
+        builder.Services.AddSingleton<IUserService, UserService>();
+        builder.Services.AddSingleton<IProductService, ProductService>();
+        builder.Services.AddSingleton<IReceiptService, ReceiptService>();
 
         builder.Services.AddControllers();
         builder.Services.AddSwaggerGen();

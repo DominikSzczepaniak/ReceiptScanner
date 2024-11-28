@@ -1,4 +1,5 @@
-﻿using Backend.Models;
+﻿using Backend.Interfaces;
+using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,7 +7,7 @@ namespace Backend.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ReceiptController(ReceiptService receiptService, ProductService productService)
+public class ReceiptController(IReceiptService receiptService, IProductService productService, IReceiptProductConnectionService receiptProductConnectionService)
     : Controller
 {
     [HttpGet("{id}")]
@@ -105,7 +106,7 @@ public class ReceiptController(ReceiptService receiptService, ProductService pro
     }
 
     [HttpPost("{ownerId}")]
-    public async Task<IActionResult> AddReceipt([FromBody] JsonReceipt order, int ownerId)
+    public async Task<IActionResult> AddReceipt([FromBody] JsonReceipt order, int ownerId) //TODO delegate logic to ReceiptService 
     {
         //json body:
         //{
@@ -128,7 +129,7 @@ public class ReceiptController(ReceiptService receiptService, ProductService pro
             foreach (var item in order.Items)
             {
                 var productId = await productService.AddProduct(item.Name, item.Price, item.QuantityWeight, item.Category, ownerId);
-                await receiptService.AddProductReceiptConnection(productId, receiptId);
+                await receiptProductConnectionService.AddProductReceiptConnection(productId, receiptId);
             }
             return Ok();
         }

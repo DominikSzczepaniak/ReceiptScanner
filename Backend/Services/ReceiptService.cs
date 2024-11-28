@@ -1,14 +1,14 @@
 ﻿using Backend.Data;
+using Backend.Interfaces;
 using Backend.Models;
 
 namespace Backend.Services;
 
-public class ReceiptService(IDatabaseHandler databaseConnection, ProductService productService)
+public class ReceiptService(IDatabaseHandler databaseConnection, IProductService productService, IReceiptProductConnectionService receiptProductConnectionService) : IReceiptService
 {
     public async Task<Receipt> GetReceiptData(int id)
     {
-        var receipt = await databaseConnection.GetReceiptData(id);
-        return receipt;
+        return await databaseConnection.GetReceiptData(id);
     }
 
     public async Task<List<Receipt>> GetReceiptsForUser(int ownerId)
@@ -16,7 +16,7 @@ public class ReceiptService(IDatabaseHandler databaseConnection, ProductService 
         return await databaseConnection.GetReceiptsForUser(ownerId);
     }
 
-    public async Task<List<Receipt>> GetReceiptsBetweenDates(DateTime startDate, DateTime endDate, int ownerId)
+    private async Task<List<Receipt>> GetReceiptsBetweenDates(DateTime startDate, DateTime endDate, int ownerId)
     {
         return await databaseConnection.GetReceiptsBetweenDates(startDate, endDate, ownerId);
     }
@@ -49,10 +49,10 @@ public class ReceiptService(IDatabaseHandler databaseConnection, ProductService 
 
     public async Task DeleteReceipt(int id)
     {
+        await receiptProductConnectionService.DeleteAllReceiptConnections(id);
         var products = await productService.GetReceiptProducts(id);
         foreach (var product in products)
         {
-            await databaseConnection.DeleteProductReceiptConnection(id, product.Id);
             await databaseConnection.DeleteProduct(product.Id);
         }
         await databaseConnection.DeleteReceipt(id);
@@ -61,10 +61,5 @@ public class ReceiptService(IDatabaseHandler databaseConnection, ProductService 
     public async Task<int> AddReceipt(DateTime dateTime, string shopName, int ownerId)
     {
         return await databaseConnection.AddReceipt(dateTime, shopName, ownerId);
-    }
-
-    public async Task AddProductReceiptConnection(int productId, int receiptId)
-    {
-        await databaseConnection.AddProductReceiptConnection(productId, receiptId);
     }
 }

@@ -1,10 +1,11 @@
-﻿using Backend.Services;
+﻿using Backend.Interfaces;
+using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 namespace Backend.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProductController(ProductService productService) : Controller
+public class ProductController(IProductService productService) : Controller
 {
     [HttpGet("{productId}")]
     public async Task<IActionResult> GetProduct(int productId)

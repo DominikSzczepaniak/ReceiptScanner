@@ -1,11 +1,12 @@
-﻿using Backend.Services;
+﻿using Backend.Interfaces;
+using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UserController(UserService userService) : Controller
+public class UserController(IUserService userService) : Controller
 {
     [HttpGet("{username}/{password}")]
     public async Task<IActionResult> GetUserData(string username, string password)

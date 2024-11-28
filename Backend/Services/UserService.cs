@@ -1,9 +1,10 @@
 ﻿using Backend.Data;
+using Backend.Interfaces;
 using Backend.Models;
 
 namespace Backend.Services
 {
-    public class UserService(IDatabaseHandler databaseConnection)
+    public class UserService(IDatabaseHandler databaseConnection) : IUserService
     {
         public async Task<User> GetUserData(string username, string password)
         {

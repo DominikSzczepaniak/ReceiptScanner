@@ -1,9 +1,10 @@
 ﻿using Backend.Data;
+using Backend.Interfaces;
 using Backend.Models;
 
 namespace Backend.Services;
 
-public class ProductService(IDatabaseHandler databaseConnection)
+public class ProductService(IDatabaseHandler databaseConnection, IReceiptProductConnectionService receiptProductConnectionService) : IProductService
 {
     public async Task<int> AddProduct(string name, decimal price, decimal quantityWeight, string category, int ownerId)
     {
@@ -27,8 +28,9 @@ public class ProductService(IDatabaseHandler databaseConnection)
         return result;
     }
 
-    public async Task DeleteProduct(int productId) //TODO delete also from ReceiptToProducts database
+    public async Task DeleteProduct(int productId)
     {
+        await receiptProductConnectionService.DeleteAllProductConnections(productId);
         await databaseConnection.DeleteProduct(productId);
     }
 }

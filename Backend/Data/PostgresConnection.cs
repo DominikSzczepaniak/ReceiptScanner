@@ -285,8 +285,26 @@ namespace Backend.Data
 
             return result;
         }
-    
-        public async Task DeleteProductReceiptConnection(int productId, int receiptId)
+        
+        public async Task DeleteAllProductConnections(int productId)
+        {
+            await using var connection = await GetConnectionAsync();
+            await using var cmd = new NpgsqlCommand("DELETE FROM ReceiptToProducts WHERE ProductId=@productId", connection);
+            cmd.Parameters.AddWithValue("productId", productId);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        public async Task DeleteAllReceiptConnections(int id)
+        {
+            await using var connection = await GetConnectionAsync();
+            await using var cmd = new NpgsqlCommand("DELETE FROM ReceiptToProducts WHERE ReceiptId=@id", connection);
+            cmd.Parameters.AddWithValue("id", id);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        public async Task DeleteProductReceiptConnection(int receiptId, int productId)
         {
             await using var connection = await GetConnectionAsync();
             await using var cmd = new NpgsqlCommand("DELETE FROM ReceiptToProducts WHERE ReceiptId=@receiptId AND ProductId=@productId", connection);
