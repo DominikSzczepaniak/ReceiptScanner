@@ -1,6 +1,7 @@
 ﻿using Backend.Interfaces;
 using Backend.Models;
 using Backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
@@ -10,6 +11,7 @@ namespace Backend.Controllers;
 public class ReceiptController(IReceiptService receiptService, IProductService productService, IReceiptProductConnectionService receiptProductConnectionService)
     : Controller
 {
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetReceiptData(int id)
     {
@@ -28,6 +30,7 @@ public class ReceiptController(IReceiptService receiptService, IProductService p
         }
     }
 
+    [Authorize]
     [HttpGet("receipts/{ownerId}")] //TODO: Limit number of receipts retrieved from database and only load more if user changes table in frontend
     public async Task<IActionResult> GetReceiptsForUser(int ownerId)
     {
@@ -42,6 +45,7 @@ public class ReceiptController(IReceiptService receiptService, IProductService p
         }
     }
 
+    [Authorize]
     [HttpGet("totalSpending/{startDate}/{endDate}/{ownerId}")]
     public async Task<IActionResult> GetTotalSpendingBetweenDates(DateTime startDate, DateTime endDate, int ownerId)
     {
@@ -56,6 +60,7 @@ public class ReceiptController(IReceiptService receiptService, IProductService p
         }
     }
 
+    [Authorize]
     [HttpGet("receipts/{startDate}/{endDate}/{ownerId}")]
     public async Task<IActionResult> GetReceiptsBetweenDates(DateTime startDate, DateTime endDate, int ownerId)
     {
@@ -70,6 +75,7 @@ public class ReceiptController(IReceiptService receiptService, IProductService p
         }
     }
 
+    [Authorize]
     [HttpGet("mainPageData/{startDate}/{endDate}/{ownerId}")]
     public async Task<IActionResult> GetMainPageData(DateTime startDate, DateTime endDate, int ownerId)
     {
@@ -87,6 +93,7 @@ public class ReceiptController(IReceiptService receiptService, IProductService p
         }
     }
 
+    [Authorize]
     [HttpDelete("{receiptId}")]
     public async Task<IActionResult> DeleteReceipt(int receiptId)
     {
@@ -105,6 +112,7 @@ public class ReceiptController(IReceiptService receiptService, IProductService p
         }
     }
 
+    [Authorize]
     [HttpPost("{ownerId}")]
     public async Task<IActionResult> AddReceipt([FromBody] JsonReceipt order, int ownerId) //TODO delegate logic to ReceiptService 
     {

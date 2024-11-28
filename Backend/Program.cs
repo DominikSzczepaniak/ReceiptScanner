@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Backend.Data;
 using Backend.Interfaces;
 using Backend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 class Program
 {
@@ -27,6 +30,23 @@ class Program
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<IProductService, ProductService>();
         builder.Services.AddSingleton<IReceiptService, ReceiptService>();
+        builder.Services.AddSingleton<TokenProvider>();
+
+        builder.Services.AddAuthorization();
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
+        {
+            o.RequireHttpsMetadata = false;
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = builder.Configuration.GetSection("JwtIssuer").Get<String>(),
+                ValidateAudience = true,
+                ValidAudience = builder.Configuration.GetSection("JwtAudience").Get<String>(),
+                ValidateLifetime = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JwtSecret").Get<String>()!)),
+                ClockSkew = TimeSpan.Zero
+            };
+        });
 
         builder.Services.AddControllers();
         builder.Services.AddSwaggerGen();
@@ -54,6 +74,9 @@ class Program
         app.UseCors("AllowSpecificOrigin");
 
         app.MapControllers();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.Run();
     }

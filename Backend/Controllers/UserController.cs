@@ -1,5 +1,6 @@
 ﻿using Backend.Interfaces;
 using Backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
@@ -43,6 +44,7 @@ public class UserController(IUserService userService) : Controller
         }
     }
 
+    [Authorize]
     [HttpDelete("{username}/{password}")]
     public async Task<IActionResult> DeleteUser(string username, string password)
     {

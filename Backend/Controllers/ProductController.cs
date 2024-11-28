@@ -1,5 +1,6 @@
 ﻿using Backend.Interfaces;
 using Backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Backend.Controllers;
 
@@ -7,6 +8,7 @@ namespace Backend.Controllers;
 [ApiController]
 public class ProductController(IProductService productService) : Controller
 {
+    [Authorize]
     [HttpGet("{productId}")]
     public async Task<IActionResult> GetProduct(int productId)
     {
@@ -25,6 +27,7 @@ public class ProductController(IProductService productService) : Controller
         }
     }
     
+    [Authorize]
     [HttpGet("receipt/{receiptId}")]
     public async Task<IActionResult> ReceiptProducts(int receiptId)
     {
@@ -42,6 +45,7 @@ public class ProductController(IProductService productService) : Controller
         }
     }
 
+    [Authorize]
     [HttpDelete("{productId}")]
     public async Task<IActionResult> DeleteProduct(int productId)
     {
