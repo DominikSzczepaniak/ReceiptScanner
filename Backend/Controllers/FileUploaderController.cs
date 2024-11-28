@@ -10,19 +10,41 @@ namespace Backend.Controllers;
 public class FileUploaderController : ControllerBase
 {
     [HttpPost("{id}")]
-    public Task<IActionResult> UploadImage([FromForm] ImageDTO img, string id)
+    public async Task<IActionResult> UploadImage([FromForm] ImageDTO img, string id)
     {
-        Image image = new Image { FileName = img.FileName };
-        byte[] imageData = null;
-        using (var binaryReader = new BinaryReader(img.Image.OpenReadStream()))
+        if (img.Image == null || img.Image.Length == 0)
         {
-            imageData = binaryReader.ReadBytes((int)img.Image.Length);
+            return BadRequest("Image is required.");
         }
-        image.Picture = imageData;
-        Console.WriteLine("Correctly updated");
-        //TODO Create sequence in database for image id 
-        // Add image to folder images with given id 
-        // Run docker script on this image 
-        return Task.FromResult<IActionResult>(Ok());
+
+        try
+        {
+            Image image = new Image { FileName = img.FileName };
+            using (var binaryReader = new BinaryReader(img.Image.OpenReadStream()))
+            {
+                image.Picture = binaryReader.ReadBytes((int)img.Image.Length);
+            }
+
+            var uploadsFolder = Path.Combine("uploads", "images", id);
+            Directory.CreateDirectory(uploadsFolder); // Create folder if it doesn't exist
+            var filePath = Path.Combine(uploadsFolder, img.FileName);
+
+            await using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await img.Image.CopyToAsync(stream);
+            }
+
+            Console.WriteLine("Image successfully uploaded.");
+
+            return Ok(new { Message = "Image uploaded successfully.", Path = filePath });
+            //TODO
+            //Send image to docker container and run the script inside, it should return JSON with Product class items which then we add to db
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex); //change to logger later
+            return StatusCode(500, "An error occurred while processing your request.");
+        }
+
     }
-} 
+}
