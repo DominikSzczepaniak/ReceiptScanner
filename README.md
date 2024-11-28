@@ -19,7 +19,8 @@ Installation guide:
 7. In Backend/appsettings.Development.json add:
 ```
 {
-  "ConnectionString": "Host=;Port=;Database=;Username=;Password=;"
+  "ConnectionString": "Host=;Port=;Database=;Username=;Password=;",
+  "JwtSecret": <insert your secret jwt key>
 }
 ```
 With your data.
