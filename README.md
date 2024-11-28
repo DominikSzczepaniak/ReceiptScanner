@@ -20,7 +20,9 @@ Installation guide:
 ```
 {
   "ConnectionString": "Host=;Port=;Database=;Username=;Password=;",
-  "JwtSecret": <insert your secret jwt key>
+  "JwtSecret": <insert your secret jwt key>,
+  "JwtIssuer": "",
+  "JwtAudience": ""
 }
 ```
 With your data.
