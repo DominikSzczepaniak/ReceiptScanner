@@ -50,7 +50,8 @@
         "fileNotSelected": "Nie wysłano żadnego zdjęcia!",
         "successfullySentPhoto": "Pomyślnie przesłano zdjęcie",
         "successfullyAddedReceipt": "Pomyślnie dodano paragon!",
-        "couldntAddReceipt": "Nie udało się dodać paragonu, spróbuj ponownie"
+        "couldntAddReceipt": "Nie udało się dodać paragonu, spróbuj ponownie",
+        "fileIsTooBig": "Plik jest zbyt duży, maksymalny rozmiar to 5MB"
     },
     "filters":{
         "rangeFilterTitle": "Filtrowanie przedziałami",

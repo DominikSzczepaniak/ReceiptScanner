@@ -48,6 +48,14 @@ export default function AddReceipt() {
             return;
         }
         const file = e.target.files[0];
+        const maxSize = 5242880;
+        if(file.size > maxSize) {
+            return (toast({
+                title: translations.common.error,
+                description: translations.addReceiptPage.fileIsTooBig,
+                className: "border-2 border-red-400"
+            }));
+        }
         const form = new FormData();
         form.append('file', file);
         setState({file: form});
